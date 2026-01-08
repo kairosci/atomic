@@ -34,7 +34,7 @@ configure-theme() {
     apply-kwrite "kdeglobals" "Icons" "Theme" "Papirus"
     # Use default Breeze cursor as Papirus doesn't provide one
     apply-kwrite "kcminputrc" "Mouse" "cursorTheme" "breeze_cursors"
-    apply-kwrite "kdeglobals" "General" "ColorScheme" "Breeze"
+    apply-kwrite "kdeglobals" "General" "ColorScheme" "BreezeDark"
     
     # Reset fonts to Fedora defaults (Noto Sans)
     local font="Noto Sans,10,-1,5,50,0,0,0,0,0"
