@@ -74,7 +74,7 @@ install-symlink() {
 # =============================================================================
 
 main() {
-    require-root
+    ensure-root
     
     local distro
     distro="$(detect-distro)"
@@ -82,7 +82,6 @@ main() {
     log-info "Installing Fedora Atomic Manager..."
     log-info "Detected: $distro"
     
-    set-permissions
     set-permissions
     install-symlink
     

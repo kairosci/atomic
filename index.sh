@@ -13,18 +13,17 @@ show-menu() {
     local distro
     distro="$(detect-distro)"
     
-    clear
-    echo "================================"
-    echo "    Fedora Atomic Manager"
-    echo "       [$distro]"
-    echo "================================"
+    echo -e "${BOLD}${BLUE}--------------------------------${NC}"
+    echo -e "${BOLD}     FEDORA ATOMIC MANAGER${NC}"
+    echo -e "        Mode: ${BLUE}$distro${NC}"
+    echo -e "${BOLD}${BLUE}--------------------------------${NC}"
     echo ""
-    echo "  1. Optimize System"
-    echo "  2. Update System"
-    echo "  3. Delete Folder"
-    echo "  4. Enable/Disable Folder Protection"
-    echo "  5. Switch Distro (Kionite/Silverblue)"
-    echo "  6. Exit"
+    echo -e "  [1] Optimize System"
+    echo -e "  [2] Update System"
+    echo -e "  [3] Delete Folder"
+    echo -e "  [4] Folder Protection"
+    echo -e "  [5] Switch Distro"
+    echo -e "  [6] ${RED}Exit${NC}"
     echo ""
 }
 
@@ -37,10 +36,10 @@ main() {
              "$SCRIPT_DIR/lib/"*.sh 2>/dev/null || true
     
     while true; do
+        clear
         show-menu
         read -rp "> " choice
         
-        clear
         case "$choice" in
             1) "$SCRIPT_DIR/config/index.sh" ;;
             2) "$SCRIPT_DIR/utils/update-system.sh" ;;
