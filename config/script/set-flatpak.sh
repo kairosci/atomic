@@ -23,6 +23,7 @@ readonly -a COMMON_APPS_TO_REMOVE=(
 
 readonly -a APPS_TO_INSTALL=(
     "com.discordapp.Discord"
+    "dev.anthropic.antigravity"
 )
 
 remove-defaults() {
