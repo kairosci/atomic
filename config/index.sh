@@ -10,7 +10,7 @@ run-scripts() {
     local distro
     distro="$(detect-distro)"
     
-    log-info "Starting configuration for $distro"
+    log-title "Configuration for $distro"
     
     local scripts_dir="$SCRIPT_DIR/script"
     [[ -d "$scripts_dir" ]] || { log-error "Script directory not found: $scripts_dir"; exit 1; }
@@ -54,10 +54,10 @@ run-scripts() {
             ;;
     esac
     
-    log-info "Running common scripts..."
+    log-info "Executing common scripts..."
     for script in "${common_scripts[@]}"; do
         if [[ -f "$script" ]]; then
-            log-info "Executing: $script"
+            log-info "Processing: $script"
             "$script"
         else
             log-warn "Script not found: $script"
@@ -65,10 +65,10 @@ run-scripts() {
     done
     
     if [[ ${#distro_scripts[@]} -gt 0 ]]; then
-        log-info "Running $distro-specific scripts..."
+        log-info "Executing $distro-specific scripts..."
         for script in "${distro_scripts[@]}"; do
             if [[ -f "$script" ]]; then
-                log-info "Executing: $script"
+                log-info "Processing: $script"
                 "$script"
             else
                 log-warn "Script not found: $script"
@@ -76,7 +76,7 @@ run-scripts() {
         done
     fi
     
-    log-success "Configuration completed for $distro"
+    log-success "All configurations applied for $distro"
 }
 
 main() {
