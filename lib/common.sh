@@ -5,6 +5,14 @@ set -euo pipefail
 
 readonly SCRIPT_NAME="${0##*/}"
 
+# Colors and Formatting
+readonly BOLD='\033[1m'
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[0;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
 detect-distro() {
     [[ -n "${FORCE_DISTRO:-}" ]] && return
     
@@ -27,7 +35,7 @@ get-user-home() {
 
 ensure-root() {
     if [[ "$EUID" -ne 0 ]]; then
-        echo "Privilege escalation required for $SCRIPT_NAME..." >&2
+        echo -e "${YELLOW}Privilege escalation required for $SCRIPT_NAME...${NC}" >&2
         exec sudo "$0" "$@"
     fi
 }
@@ -38,10 +46,13 @@ ensure-user() {
     fi
 }
 
-log-info() { echo "[INFO] $*"; }
-log-warn() { echo "[WARN] $*" >&2; }
-log-error() { echo "[ERROR] $*" >&2; }
-log-success() { echo "[OK] $*"; }
+log-info() { echo -e "${BLUE}[INFO]${NC} $*"; }
+log-warn() { echo -e "${YELLOW}[WARN]${NC} $*" >&2; }
+log-error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
+log-success() { echo -e "${GREEN}[OK]${NC} $*"; }
+log-title() { 
+    echo -e "\n${BOLD}${BLUE}==== $* ====${NC}"
+}
 
 fix-ownership() {
     local path="$1"
