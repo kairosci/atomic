@@ -14,7 +14,7 @@ readonly -a KIONITE_APPS_TO_REMOVE=(
 readonly -a SILVERBLUE_APPS_TO_REMOVE=(
     "org.gnome.Contacts" "org.gnome.Maps" "org.gnome.Weather"
     "org.gnome.Cheese" "org.gnome.Totem" "org.gnome.Rhythmbox3"
-    "org.gnome.Characters"
+    "org.gnome.Characters" "org.gnome.SystemMonitor"
 )
 
 readonly -a COMMON_APPS_TO_REMOVE=(
