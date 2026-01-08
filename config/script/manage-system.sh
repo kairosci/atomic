@@ -37,6 +37,17 @@ readonly -a SILVERBLUE_SHARE_DIRS=(
     ".local/share/cheese" ".local/share/rhythmbox" ".local/share/yelp"
 )
 
+readonly -a COSMIC_CONFIG_DIRS=(
+    ".config/cosmic" ".config/cosmic-app-library" ".config/cosmic-comp"
+    ".config/cosmic-greeter" ".config/cosmic-launcher" ".config/cosmic-osd"
+    ".config/cosmic-panel" ".config/cosmic-session" ".config/cosmic-settings"
+    ".config/cosmic-shortcut" ".config/cosmic-term" ".config/cosmic-workspaces"
+)
+
+readonly -a COSMIC_SHARE_DIRS=(
+    ".local/share/cosmic"
+)
+
 readonly -a COMMON_CONFIG_DIRS=(
     ".mozilla" ".config/ibus/typing-booster" ".config/toolboxrc"
 )
@@ -75,6 +86,11 @@ remove-user-configs() {
             ;;
         silverblue)
             for dir in "${SILVERBLUE_CONFIG_DIRS[@]}" "${SILVERBLUE_SHARE_DIRS[@]}"; do
+                rm -rf "$user_home/$dir"
+            done
+            ;;
+        cosmic)
+            for dir in "${COSMIC_CONFIG_DIRS[@]}" "${COSMIC_SHARE_DIRS[@]}"; do
                 rm -rf "$user_home/$dir"
             done
             ;;
