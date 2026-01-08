@@ -53,7 +53,7 @@ create-container() {
         --image "$CONTAINER_IMAGE" \
         --name "$CONTAINER_NAME" \
         --additional-packages "$PACKAGES" \
-        --yes
+        --yes > /dev/null 2>&1
 
     log-success "Container '$CONTAINER_NAME' created successfully."
 }
