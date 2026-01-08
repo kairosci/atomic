@@ -80,6 +80,31 @@ set-default-shell() {
     fi
 }
 
+configure-zshrc() {
+    local user_home
+    user_home="$(get-user-home)"
+    local zshrc="$user_home/.zshrc"
+    
+    if [[ ! -f "$zshrc" ]]; then
+        log-warn ".zshrc not found, skipping theme configuration"
+        return 0
+    fi
+    
+    log-info "Configuring zsh theme to 'refined'..."
+    
+    # Change the theme from robbyrussell (default) to refined
+    if grep -q 'ZSH_THEME="robbyrussell"' "$zshrc"; then
+        sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="refined"/' "$zshrc"
+        log-success "Theme set to 'refined'"
+    elif grep -q 'ZSH_THEME=' "$zshrc"; then
+        # Replace any existing theme
+        sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="refined"/' "$zshrc"
+        log-success "Theme updated to 'refined'"
+    else
+        log-warn "ZSH_THEME not found in .zshrc"
+    fi
+}
+
 # =============================================================================
 # Entry Point
 # =============================================================================
@@ -88,6 +113,7 @@ main() {
     ensure-root
     cleanup-omb
     install-omz
+    configure-zshrc
     set-default-shell
 }
 
