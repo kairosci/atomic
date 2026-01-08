@@ -46,9 +46,15 @@ install-omz() {
     local omz_dir="$user_home/.oh-my-zsh"
     
     # Check dependencies
-    require-command zsh "zsh is required for Oh My Zsh. Install it via set-rpm.sh first."
     require-command git "git is required for Oh My Zsh"
     require-command curl "curl is required for Oh My Zsh"
+    
+    if ! command-exists zsh; then
+        log-warn "zsh is not installed or not in PATH."
+        log-warn "If you just installed it via set-rpm.sh, a system reboot is required."
+        log-warn "Please reboot and try again."
+        return 0
+    fi
     
     # Install Oh My Zsh if missing
     if [[ ! -d "$omz_dir" ]]; then
