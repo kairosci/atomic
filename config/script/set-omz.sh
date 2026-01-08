@@ -59,7 +59,7 @@ install-omz() {
     # Install Oh My Zsh if missing
     if [[ ! -d "$omz_dir" ]]; then
         log-info "Installing Oh My Zsh..."
-        curl -fsSL "$OMZ_INSTALL_URL" | sudo -u "$real_user" zsh -s -- --unattended
+        curl -fsSL "$OMZ_INSTALL_URL" | sudo -u "$real_user" zsh -s -- --unattended > /dev/null 2>&1
         log-success "Oh My Zsh installed"
     else
         log-info "Oh My Zsh already installed"
