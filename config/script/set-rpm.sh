@@ -38,6 +38,15 @@ readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
     "papirus-icon-theme" "arc-theme" "btop" "zsh" "util-linux-user"
 )
 
+readonly -a COSMIC_PACKAGES_TO_REMOVE=(
+    "toolbox" "firefox" "firefox-langpacks"
+)
+
+readonly -a COSMIC_PACKAGES_TO_INSTALL=(
+    "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
+    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+)
+
 remove-base-packages() {
     local distro="$1"
     local -n packages_ref="$2"
@@ -108,6 +117,11 @@ main() {
             remove-base-packages "Silverblue" SILVERBLUE_PACKAGES_TO_REMOVE
             install-third-party-repos
             install-packages SILVERBLUE_PACKAGES_TO_INSTALL
+            ;;
+        cosmic)
+            remove-base-packages "Cosmic" COSMIC_PACKAGES_TO_REMOVE
+            install-third-party-repos
+            install-packages COSMIC_PACKAGES_TO_INSTALL
             ;;
         *)
             log-error "Unknown distro: $distro"

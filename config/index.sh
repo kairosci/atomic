@@ -49,6 +49,12 @@ run-scripts() {
                 "./silverblue/optimize-animations.sh"
             )
             ;;
+        cosmic)
+            # Cosmic uses standard scripts for now, but we can add specific ones here later
+            distro_scripts=(
+                "./cosmic/set-appearance.sh" # Placeholder/Future implementation
+            )
+            ;;
         *)
             log-warn "Unknown distro: $distro, running common scripts only"
             ;;

@@ -29,24 +29,42 @@ switch-distro() {
     log-info "Current configuration:"
     log-info "  Distro:  $current_distro"
     log-info "  Version: Fedora $os_version"
+    echo ""
+    
+    echo "Select target distro:"
+    echo "  [1] Silverblue (GNOME)"
+    echo "  [2] Kinoite (KDE Plasma)"
+    echo "  [3] Cosmic (COSMIC DE)"
+    echo "  [4] Cancel"
+    
+    read -rp "> " choice
     
     local target_distro=""
     local target_ref=""
     
-    case "$current_distro" in
-        silverblue)
-            target_distro="kinoite"
-            target_ref="fedora:fedora/${os_version}/x86_64/kinoite"
-            ;;
-        kionite)
+    case "$choice" in
+        1)
             target_distro="silverblue"
             target_ref="fedora:fedora/${os_version}/x86_64/silverblue"
             ;;
+        2)
+            target_distro="kinoite"
+            target_ref="fedora:fedora/${os_version}/x86_64/kinoite"
+            ;;
+        3)
+            target_distro="cosmic"
+            target_ref="fedora:fedora/${os_version}/x86_64/cosmic-atomic"
+            ;;
         *)
-            log-error "Unknown or unsupported current distro: $current_distro"
-            exit 1
+            log-info "Operation cancelled."
+            exit 0
             ;;
     esac
+    
+    if [[ "$current_distro" == "$target_distro" ]]; then
+        log-warn "You are already on $target_distro."
+        exit 0
+    fi
     
     echo ""
     log-info "Target configuration:"
