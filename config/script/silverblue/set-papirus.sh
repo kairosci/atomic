@@ -7,12 +7,13 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
 readonly ICON_THEME="Papirus"
+readonly ARC_THEME="Arc-Dark"
 
 apply-papirus-theme() {
     log-info "Applying Papirus theme for GNOME"
     
-    # Reset GTK/Cursor/Sound to default (Adwaita) as Yaru is removed
-    dconf reset /org/gnome/desktop/interface/gtk-theme
+    # Set GTK/Cursor/Sound
+    dconf write /org/gnome/desktop/interface/gtk-theme "'$ARC_THEME'"
     dconf reset /org/gnome/desktop/interface/cursor-theme
     dconf reset /org/gnome/desktop/sound/theme-name
     

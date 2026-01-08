@@ -35,7 +35,7 @@ readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
 
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
     "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
-    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+    "papirus-icon-theme" "arc-theme" "btop" "zsh" "util-linux-user"
 )
 
 remove-base-packages() {
