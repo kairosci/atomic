@@ -26,7 +26,7 @@ run-scripts() {
         "./set-protonmail-pwa.sh"
         "./manage-system.sh"
         "./set-safe-delete.sh"
-        "./set-omb.sh"
+        "./set-omz.sh"
         "./optimize-system.sh"
     )
     
