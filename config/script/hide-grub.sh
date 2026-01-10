@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Hide GRUB Menu
 # Sets GRUB timeout to 0 for instant boot

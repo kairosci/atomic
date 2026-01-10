@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Set Flatpak Apps
 
 set -euo pipefail

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Safe Delete
 # Configures rm alias to use gio trash for safe deletion

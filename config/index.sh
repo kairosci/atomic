@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Fedora Atomic Configuration Index
 
 set -euo pipefail

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Set Papirus Look (Kionite)
 
 set -euo pipefail

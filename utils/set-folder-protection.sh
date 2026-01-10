@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Folder Protection
 # Protects visible folders with immutable anchor files

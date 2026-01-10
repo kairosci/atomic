@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Oh My Zsh
 # Installs Oh My Zsh, removes Oh My Bash, and configures Zsh as default
@@ -112,7 +112,8 @@ configure-aliases() {
     
     log-info "Configuring custom aliases..."
     
-    cat << 'EOL' >> "$zshrc"
+    if ! grep -q "alias ll=" "$zshrc"; then
+        cat << 'EOF' >> "$zshrc"
 
 # Custom Operations
 alias ll='ls -alF'
@@ -134,16 +135,13 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias .3='cd ../../..'
 alias .4='cd ../../../..'
+EOF
+        log-success "Custom aliases added"
+    else
+        log-info "Aliases already present, skipping..."
+    fi
 
-# Git
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git pull'
-EOL
-
-    log-success "Custom aliases added"
+    # Git aliases are provided by the 'git' plugin in Oh My Zsh
 }
 
 # =============================================================================

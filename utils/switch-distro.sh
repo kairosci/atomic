@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Switch Distro
 # Switches between Fedora Silverblue and Kionite (and vice versa)

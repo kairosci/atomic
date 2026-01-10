@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Fedora Atomic Manager
 
 set -euo pipefail

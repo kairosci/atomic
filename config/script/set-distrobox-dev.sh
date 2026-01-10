@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Distrobox Dev Container
 # Creates a Fedora-based distrobox container for development

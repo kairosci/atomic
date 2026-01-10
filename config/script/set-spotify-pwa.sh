@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Spotify PWA
 # Creates a desktop entry for Spotify as a Progressive Web App via Brave

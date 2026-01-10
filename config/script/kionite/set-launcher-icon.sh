@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Launcher Icon
 # Resets the KDE Plasma launcher icon to the default KDE icon
