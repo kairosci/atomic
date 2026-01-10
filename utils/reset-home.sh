@@ -29,7 +29,7 @@ reset-home() {
     # Create a backup timestamp
     local timestamp
     timestamp="$(date +%Y%m%d_%H%M%S)"
-    local backup_dir="$user_home/.config_backup_$timestamp"
+    local backup_dir="$user_home/config_backup_$timestamp"
     
     log-info "Creating safety backup at $backup_dir (just in case)..."
     mkdir -p "$backup_dir"
