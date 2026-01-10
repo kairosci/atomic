@@ -83,6 +83,24 @@ switch-distro() {
         exit 0
     fi
     
+    if confirm "Do you want to RESET your home directory (delete old configs)?"; then
+        log-info "Performing home directory reset..."
+        
+        # We need to run this as the real user, not root (since switch-distro runs as root)
+        # But wait, switch-distro calls ensure-root.
+        # We should use sudo -u $SUDO_USER to run the reset script if we are root.
+        
+        local user_script="$SCRIPT_DIR/reset-home.sh"
+        local real_user
+        real_user="$(get-real-user)"
+        
+        if [[ -f "$user_script" ]]; then
+            sudo -u "$real_user" "$user_script"
+        else
+            log-error "Reset script not found at $user_script"
+        fi
+    fi
+
     log-info "Starting rebase to $target_distro..."
     rpm-ostree rebase "$target_ref"
     
