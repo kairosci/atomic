@@ -27,6 +27,7 @@ readonly -a COMMON_APPS_TO_REMOVE=(
 
 readonly -a APPS_TO_INSTALL=(
     "com.discordapp.Discord"
+    "io.missioncenter.MissionCenter"
 )
 
 remove-defaults() {
