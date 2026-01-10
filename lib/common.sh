@@ -55,7 +55,7 @@ log-warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2; }
 log-error() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; }
 log-success() { printf "${GREEN}[OK]${NC} %s\n" "$*"; }
 log-title() { 
-    printf "\n${BOLD}${BLUE}==== %s ====${NC}\n" "$*"
+    printf "\n${BOLD}${BLUE}**** %s ****${NC}\n" "$*"
 }
 
 fix-ownership() {
