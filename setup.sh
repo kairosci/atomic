@@ -7,7 +7,8 @@
 set -euo pipefail
 
 # Get script directory
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 
 # Source common library
 source "$SCRIPT_DIR/lib/common.sh"

@@ -3,9 +3,8 @@
 
 set -euo pipefail
 
-TARGET_FILE="${BASH_SOURCE[0]}"
-[[ -L "$TARGET_FILE" ]] && TARGET_FILE="$(readlink -f "$TARGET_FILE")"
-readonly SCRIPT_DIR="$(cd "$(dirname "$TARGET_FILE")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 
 source "$SCRIPT_DIR/lib/common.sh"
 

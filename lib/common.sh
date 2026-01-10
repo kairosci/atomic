@@ -40,7 +40,8 @@ get-user-home() {
 ensure-root() {
     if [[ "$EUID" -ne 0 ]]; then
         printf "${YELLOW}Privilege escalation required for %s...${NC}\n" "$SCRIPT_NAME" >&2
-        exec sudo "$0" "$@"
+        local target_script="${SCRIPT_FILE:-${0:A}}"
+        exec sudo "$target_script" "$@"
     fi
 }
 
