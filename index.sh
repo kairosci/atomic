@@ -13,10 +13,10 @@ show-menu() {
     local distro
     distro="$(detect-distro)"
     
-    printf "${BOLD}${BLUE}--------------------------------${NC}\n"
+    printf "${BOLD}${BLUE}===========================${NC}\n"
     printf "${BOLD}     FEDORA ATOMIC MANAGER${NC}\n"
     printf "        Flavour: ${BLUE}%s${NC}\n" "$distro"
-    printf "${BOLD}${BLUE}--------------------------------${NC}\n"
+    printf "${BOLD}${BLUE}===========================${NC}\n"
     printf "\n"
     printf "  [1] Optimize System\n"
     printf "  [2] Update System\n"

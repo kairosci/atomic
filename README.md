@@ -5,7 +5,7 @@ Configuration scripts for **Fedora Kionite** (KDE) and **Fedora Silverblue** (GN
 ## Features
 
 | Feature                               | Kionite | Silverblue |
-|---------------------------------------|:-------:|:----------:|
+|===========================-------|:-------:|:----------:|
 | Distro Auto Detection                 | ✓       | ✓          |
 | Remove Bloatware                      | ✓       | ✓          |
 | Brave Browser                         | ✓       | ✓          |
