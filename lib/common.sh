@@ -82,7 +82,7 @@ confirm() {
     local prompt="${1:-Are you sure?}"
     printf "${YELLOW}%s [y/N] ${NC}" "$prompt"
     read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+    if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         log-info "Operation cancelled."
         return 1
     fi
