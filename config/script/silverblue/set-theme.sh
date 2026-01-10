@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/bash
 # Set Themes (Orchis + Papirus)
 # Installs Orchis GTK theme and Papirus Icons
 
