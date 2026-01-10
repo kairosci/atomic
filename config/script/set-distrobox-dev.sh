@@ -1,9 +1,9 @@
 #!/usr/bin/env zsh
-# =============================================================================
+# *****************************************************************************
 # Set Distrobox Dev Container
 # Creates a Fedora-based distrobox container for development
 # Includes: Node.js, NPM, Build Tools, Zsh (with OMZ support via shared home)
-# =============================================================================
+# *****************************************************************************
 
 set -euo pipefail
 
@@ -11,17 +11,17 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
-# =============================================================================
+# *****************************************************************************
 # Constants
-# =============================================================================
+# *****************************************************************************
 
 readonly CONTAINER_NAME="dev"
 readonly CONTAINER_IMAGE="registry.fedoraproject.org/fedora:latest"
 readonly PACKAGES="nodejs npm @development-tools zsh git curl wget"
 
-# =============================================================================
+# *****************************************************************************
 # Main Functions
-# =============================================================================
+# *****************************************************************************
 
 check-distrobox() {
     require-command distrobox "distrobox is required to create containers"
@@ -68,9 +68,9 @@ configure-omz-integration() {
     log-info "To enter the container with Zsh, use: distrobox enter $CONTAINER_NAME"
 }
 
-# =============================================================================
+# *****************************************************************************
 # Entry Point
-# =============================================================================
+# *****************************************************************************
 
 main() {
     log-title "Setting up '$CONTAINER_NAME' Distrobox Environment"

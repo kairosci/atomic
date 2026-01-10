@@ -74,9 +74,9 @@ scan-directory() {
 main() {
     ensure-user
     
-    echo "==================================================="
+    echo "************************************************==="
     echo " CLEAN ORPHANED CONFIGURATIONS"
-    echo "==================================================="
+    echo "************************************************==="
     
     scan-directory "$HOME/.config" "User Config"
     scan-directory "$HOME/.local/share" "Local Data"
