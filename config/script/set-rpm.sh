@@ -22,6 +22,7 @@ readonly -a KIONITE_PACKAGES_TO_INSTALL=(
     "kalk" "ksshaskpass" "libvirt" "tlp" "tlp-rdw"
     "qemu-kvm" "distrobox" "rsms-inter-fonts"
     "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+    "antigravity"
 )
 
 readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
@@ -36,6 +37,7 @@ readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
     "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
     "papirus-icon-theme" "arc-theme" "btop" "zsh" "util-linux-user"
+    "antigravity"
 )
 
 readonly -a COSMIC_PACKAGES_TO_REMOVE=(
@@ -45,6 +47,7 @@ readonly -a COSMIC_PACKAGES_TO_REMOVE=(
 readonly -a COSMIC_PACKAGES_TO_INSTALL=(
     "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
     "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+    "antigravity"
 )
 
 remove-base-packages() {
@@ -86,6 +89,20 @@ install-third-party-repos() {
         log-success "Brave repository added"
     else
         log-info "Brave repository already exists"
+    fi
+
+    if [[ ! -f /etc/yum.repos.d/antigravity.repo ]]; then
+        log-info "Adding Antigravity repository"
+        cat << EOL > /etc/yum.repos.d/antigravity.repo
+[antigravity-rpm]
+name=Antigravity RPM Repository
+baseurl=https://us-central1-yum.pkg.dev/projects/antigravity-auto-updater-dev/antigravity-rpm
+enabled=1
+gpgcheck=0
+EOL
+        log-success "Antigravity repository added"
+    else
+        log-info "Antigravity repository already exists"
     fi
 }
 
