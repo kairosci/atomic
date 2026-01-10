@@ -15,7 +15,7 @@ show-menu() {
     
     printf "${BOLD}${BLUE}--------------------------------${NC}\n"
     printf "${BOLD}     FEDORA ATOMIC MANAGER${NC}\n"
-    printf "        Mode: ${BLUE}%s${NC}\n" "$distro"
+    printf "        Flavour: ${BLUE}%s${NC}\n" "$distro"
     printf "${BOLD}${BLUE}--------------------------------${NC}\n"
     printf "\n"
     printf "  [1] Optimize System\n"
