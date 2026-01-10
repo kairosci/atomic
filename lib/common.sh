@@ -77,3 +77,14 @@ require-command() {
     local msg="${2:-$cmd is required but not installed}"
     command-exists "$cmd" || { log-error "$msg"; exit 1; }
 }
+
+confirm() {
+    local prompt="${1:-Are you sure?}"
+    echo -ne "${YELLOW}$prompt [y/N] ${NC}"
+    read -r response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        log-info "Operation cancelled."
+        return 1
+    fi
+    return 0
+}
