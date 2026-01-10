@@ -6,7 +6,18 @@ set -euo pipefail
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
+readonly -a COMMON_PACKAGES_TO_REMOVE=(
+    "firefox" "firefox-langpacks"
+)
+
+readonly -a COMMON_PACKAGES_TO_INSTALL=(
+    "libvirt" "tlp" "tlp-rdw" "qemu-kvm"
+    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+    "antigravity"
+)
+
 readonly -a KIONITE_PACKAGES_TO_REMOVE=(
+    "${COMMON_PACKAGES_TO_REMOVE[@]}"
     "ibus-typing-booster"
     "kde-connect" "kde-connect-libs" "kdeconnectd"
     "kinfocenter" "plasma-drkonqi" "plasma-welcome" "plasma-welcome-fedora"
@@ -15,39 +26,33 @@ readonly -a KIONITE_PACKAGES_TO_REMOVE=(
     "kcharselect" "kdebugsettings" "khelpcenter"
     "krfb" "krfb-libs" "kjournald" "kjournald-libs"
     "kwalletmanager5" "filelight"
-    "firefox" "firefox-langpacks"
 )
 
 readonly -a KIONITE_PACKAGES_TO_INSTALL=(
-    "kalk" "ksshaskpass" "libvirt" "tlp" "tlp-rdw"
-    "qemu-kvm" "rsms-inter-fonts"
-    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
-    "antigravity"
+    "${COMMON_PACKAGES_TO_INSTALL[@]}"
+    "kalk" "ksshaskpass" "rsms-inter-fonts"
 )
 
 readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
+    "${COMMON_PACKAGES_TO_REMOVE[@]}"
     "gnome-software" "gnome-software-rpm-ostree"
     "gnome-contacts" "gnome-maps" "gnome-weather" "gnome-tour"
     "gnome-connections" "gnome-characters" "gnome-font-viewer"
     "gnome-logs" "gnome-remote-desktop"
     "simple-scan" "totem" "cheese" "rhythmbox" "yelp"
-    "firefox" "firefox-langpacks"
 )
 
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
-    "libvirt" "tlp" "tlp-rdw" "qemu-kvm"
-    "papirus-icon-theme" "arc-theme" "btop" "zsh" "util-linux-user"
-    "antigravity"
+    "${COMMON_PACKAGES_TO_INSTALL[@]}"
+    "arc-theme"
 )
 
 readonly -a COSMIC_PACKAGES_TO_REMOVE=(
-    "firefox" "firefox-langpacks"
+    "${COMMON_PACKAGES_TO_REMOVE[@]}"
 )
 
 readonly -a COSMIC_PACKAGES_TO_INSTALL=(
-    "libvirt" "tlp" "tlp-rdw" "qemu-kvm"
-    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
-    "antigravity"
+    "${COMMON_PACKAGES_TO_INSTALL[@]}"
 )
 
 remove-base-packages() {
