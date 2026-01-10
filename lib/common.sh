@@ -5,14 +5,11 @@ set -euo pipefail
 
 readonly SCRIPT_NAME="${0##*/}"
 
-# Colors and Formatting
 readonly BOLD='\033[1m'
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[0;33m'
 readonly BLUE='\033[0;34m'
-
-# No Color
 readonly NC='\033[0m'
 
 detect-distro() {

@@ -13,10 +13,6 @@ readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 # Source common library
 source "$SCRIPT_DIR/lib/common.sh"
 
-# =============================================================================
-# Main Functions
-# =============================================================================
-
 set-permissions() {
     log-info "Setting executable permissions..."
     chmod +x "$SCRIPT_DIR/index.sh" \
@@ -69,10 +65,6 @@ install-symlink() {
         fi
     fi
 }
-
-# =============================================================================
-# Entry Point
-# =============================================================================
 
 main() {
     ensure-root
