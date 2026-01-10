@@ -39,7 +39,7 @@ get-user-home() {
 
 ensure-root() {
     if [[ "$EUID" -ne 0 ]]; then
-        echo -e "${YELLOW}Privilege escalation required for $SCRIPT_NAME...${NC}" >&2
+        printf "${YELLOW}Privilege escalation required for %s...${NC}\n" "$SCRIPT_NAME" >&2
         exec sudo "$0" "$@"
     fi
 }
@@ -50,12 +50,12 @@ ensure-user() {
     fi
 }
 
-log-info() { echo -e "${BLUE}[INFO]${NC} $*"; }
-log-warn() { echo -e "${YELLOW}[WARN]${NC} $*" >&2; }
-log-error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
-log-success() { echo -e "${GREEN}[OK]${NC} $*"; }
+log-info() { printf "${BLUE}[INFO]${NC} %s\n" "$*"; }
+log-warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2; }
+log-error() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; }
+log-success() { printf "${GREEN}[OK]${NC} %s\n" "$*"; }
 log-title() { 
-    echo -e "\n${BOLD}${BLUE}==== $* ====${NC}"
+    printf "\n${BOLD}${BLUE}==== %s ====${NC}\n" "$*"
 }
 
 fix-ownership() {
@@ -76,4 +76,15 @@ require-command() {
     local cmd="$1"
     local msg="${2:-$cmd is required but not installed}"
     command-exists "$cmd" || { log-error "$msg"; exit 1; }
+}
+
+confirm() {
+    local prompt="${1:-Are you sure?}"
+    printf "${YELLOW}%s [y/N] ${NC}" "$prompt"
+    read -r response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        log-info "Operation cancelled."
+        return 1
+    fi
+    return 0
 }
