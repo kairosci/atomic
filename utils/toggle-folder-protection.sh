@@ -20,7 +20,7 @@ readonly ANCHOR_FILE=".state_protected"
 # =============================================================================
 
 main() {
-    require-root
+    ensure-root
     
     local user_home
     user_home="$(get-user-home)"
