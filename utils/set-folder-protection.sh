@@ -56,7 +56,7 @@ protect-directory-recursive() {
 # =============================================================================
 
 main() {
-    require-root
+    ensure-root
     
     local user_home
     user_home="$(get-user-home)"
