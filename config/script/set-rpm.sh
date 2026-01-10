@@ -6,7 +6,18 @@ set -euo pipefail
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
+readonly -a COMMON_PACKAGES_TO_REMOVE=(
+    "firefox" "firefox-langpacks"
+)
+
+readonly -a COMMON_PACKAGES_TO_INSTALL=(
+    "libvirt" "tlp" "tlp-rdw" "qemu-kvm"
+    "papirus-icon-theme" "zsh" "util-linux-user"
+    "antigravity"
+)
+
 readonly -a KIONITE_PACKAGES_TO_REMOVE=(
+    "${COMMON_PACKAGES_TO_REMOVE[@]}"
     "ibus-typing-booster"
     "kde-connect" "kde-connect-libs" "kdeconnectd"
     "kinfocenter" "plasma-drkonqi" "plasma-welcome" "plasma-welcome-fedora"
@@ -15,36 +26,33 @@ readonly -a KIONITE_PACKAGES_TO_REMOVE=(
     "kcharselect" "kdebugsettings" "khelpcenter"
     "krfb" "krfb-libs" "kjournald" "kjournald-libs"
     "kwalletmanager5" "filelight"
-    "firefox" "firefox-langpacks" "toolbox"
 )
 
 readonly -a KIONITE_PACKAGES_TO_INSTALL=(
-    "kalk" "ksshaskpass" "libvirt" "tlp" "tlp-rdw"
-    "qemu-kvm" "distrobox" "rsms-inter-fonts"
-    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+    "${COMMON_PACKAGES_TO_INSTALL[@]}"
+    "kalk" "ksshaskpass" "rsms-inter-fonts"
 )
 
 readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
+    "${COMMON_PACKAGES_TO_REMOVE[@]}"
     "gnome-software" "gnome-software-rpm-ostree"
     "gnome-contacts" "gnome-maps" "gnome-weather" "gnome-tour"
     "gnome-connections" "gnome-characters" "gnome-font-viewer"
     "gnome-logs" "gnome-remote-desktop"
     "simple-scan" "totem" "cheese" "rhythmbox" "yelp"
-    "firefox" "firefox-langpacks" "toolbox"
 )
 
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
-    "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
-    "papirus-icon-theme" "arc-theme" "btop" "zsh" "util-linux-user"
+    "${COMMON_PACKAGES_TO_INSTALL[@]}"
+    "arc-theme"
 )
 
 readonly -a COSMIC_PACKAGES_TO_REMOVE=(
-    "toolbox" "firefox" "firefox-langpacks"
+    "${COMMON_PACKAGES_TO_REMOVE[@]}"
 )
 
 readonly -a COSMIC_PACKAGES_TO_INSTALL=(
-    "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
-    "papirus-icon-theme" "btop" "zsh" "util-linux-user"
+    "${COMMON_PACKAGES_TO_INSTALL[@]}"
 )
 
 remove-base-packages() {
@@ -86,6 +94,20 @@ install-third-party-repos() {
         log-success "Brave repository added"
     else
         log-info "Brave repository already exists"
+    fi
+
+    if [[ ! -f /etc/yum.repos.d/antigravity.repo ]]; then
+        log-info "Adding Antigravity repository"
+        cat << EOL > /etc/yum.repos.d/antigravity.repo
+[antigravity-rpm]
+name=Antigravity RPM Repository
+baseurl=https://us-central1-yum.pkg.dev/projects/antigravity-auto-updater-dev/antigravity-rpm
+enabled=1
+gpgcheck=0
+EOL
+        log-success "Antigravity repository added"
+    else
+        log-info "Antigravity repository already exists"
     fi
 }
 
