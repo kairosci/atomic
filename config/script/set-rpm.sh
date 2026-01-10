@@ -44,7 +44,7 @@ readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
 
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
     "${COMMON_PACKAGES_TO_INSTALL[@]}"
-    "arc-theme"
+    "sassc" "gtk-murrine-engine"
 )
 
 readonly -a COSMIC_PACKAGES_TO_REMOVE=(
