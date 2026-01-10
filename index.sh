@@ -13,18 +13,18 @@ show-menu() {
     local distro
     distro="$(detect-distro)"
     
-    echo -e "${BOLD}${BLUE}--------------------------------${NC}"
-    echo -e "${BOLD}     FEDORA ATOMIC MANAGER${NC}"
-    echo -e "        Mode: ${BLUE}$distro${NC}"
-    echo -e "${BOLD}${BLUE}--------------------------------${NC}"
-    echo ""
-    echo -e "  [1] Optimize System"
-    echo -e "  [2] Update System"
-    echo -e "  [3] Delete Folder"
-    echo -e "  [4] Folder Protection"
-    echo -e "  [5] Switch Distro"
-    echo -e "  [6] ${RED}Exit${NC}"
-    echo ""
+    printf "${BOLD}${BLUE}--------------------------------${NC}\n"
+    printf "${BOLD}     FEDORA ATOMIC MANAGER${NC}\n"
+    printf "        Mode: ${BLUE}%s${NC}\n" "$distro"
+    printf "${BOLD}${BLUE}--------------------------------${NC}\n"
+    printf "\n"
+    printf "  [1] Optimize System\n"
+    printf "  [2] Update System\n"
+    printf "  [3] Delete Folder\n"
+    printf "  [4] Folder Protection\n"
+    printf "  [5] Switch Distro\n"
+    printf "  [6] ${RED}Exit${NC}\n"
+    printf "\n"
 }
 
 main() {
@@ -46,11 +46,11 @@ main() {
             3) confirm "Delete folder?" && "$SCRIPT_DIR/utils/delete-folder.sh" ;;
             4) confirm "Toggle folder protection?" && "$SCRIPT_DIR/utils/toggle-folder-protection.sh" ;;
             5) confirm "Switch distro?" && "$SCRIPT_DIR/utils/switch-distro.sh" ;;
-            6) log-info "Goodbye!"; exit 0 ;;
+            6) log-info "Exiting..."; exit 0 ;;
             *) log-warn "Invalid option: $choice" ;;
         esac
         
-        echo ""
+        printf "\n"
         read -rp "Press Enter to continue..."
     done
 }
