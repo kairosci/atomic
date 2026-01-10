@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Rename BTRFS Labels
 # Renames filesystem labels for /var and /var/home

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set Konsole Profile
 # Creates a custom Konsole profile with Adwaita Mono font

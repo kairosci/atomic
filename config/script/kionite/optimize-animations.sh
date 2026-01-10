@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Optimize Animations (Kionite)
 
 set -euo pipefail

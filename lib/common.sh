@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Fedora Atomic Common Library
 
 set -euo pipefail

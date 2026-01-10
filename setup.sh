@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Fedora Atomic Setup
 # Installs Atomic Manager and configures global access

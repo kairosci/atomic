@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Disable Plasma Emojier
 # Hides the KDE emoji selector via local desktop override

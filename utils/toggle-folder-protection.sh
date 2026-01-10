@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Toggle Folder Protection
 # Toggles the state of folder protection

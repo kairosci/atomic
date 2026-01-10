@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Set GNOME Extensions
 
 set -euo pipefail

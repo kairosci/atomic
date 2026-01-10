@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Unset Folder Protection
 # Removes protection from folders (removes anchor files)

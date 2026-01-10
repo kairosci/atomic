@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # =============================================================================
 # Set ProtonMail PWA
 # Creates a desktop entry for ProtonMail as a Progressive Web App via Brave
