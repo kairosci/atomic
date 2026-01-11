@@ -1,4 +1,4 @@
-# Atomic Manager (v2.0)
+# Atomic Manager (v2.1)
 
 Configuration scripts for **Fedora Kionite** (KDE) and **Fedora Silverblue** (GNOME) with automatic distro detection.
 
