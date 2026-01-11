@@ -1,17 +1,18 @@
-#!/usr/bin/bash
-# =============================================================================
+#!/usr/bin/env zsh
+# *****************************************************************************
 # Delete Folder
 # Interactively deletes folders matching a pattern
-# =============================================================================
+# *****************************************************************************
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../lib/common.sh"
 
-# =============================================================================
+# *****************************************************************************
 # Main Function
-# =============================================================================
+# *****************************************************************************
 
 delete-folders() {
     read -rp "Folder name pattern: " folder_name
@@ -30,14 +31,14 @@ delete-folders() {
     fi
     
     log-info "Searching and deleting folders..."
-    sudo find / -type d -name "*$folder_name*" -exec rm -rf {} + 2>/dev/null || true
+    sudo find / -type d -name "*$folder_name*" -exec rm -rf {} + 2>/dev/null || log-warn "Failed to delete some folders matching pattern"
     
     log-success "Done"
 }
 
-# =============================================================================
+# *****************************************************************************
 # Entry Point
-# =============================================================================
+# *****************************************************************************
 
 main() {
     delete-folders

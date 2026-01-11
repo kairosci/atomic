@@ -1,20 +1,17 @@
-#!/usr/bin/bash
-# =============================================================================
+#!/usr/bin/env zsh
+# *****************************************************************************
 # Fedora Atomic Setup
 # Installs Atomic Manager and configures global access
-# =============================================================================
+# *****************************************************************************
 
 set -euo pipefail
 
 # Get script directory
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 
 # Source common library
 source "$SCRIPT_DIR/lib/common.sh"
-
-# =============================================================================
-# Main Functions
-# =============================================================================
 
 set-permissions() {
     log-info "Setting executable permissions..."
@@ -68,10 +65,6 @@ install-symlink() {
         fi
     fi
 }
-
-# =============================================================================
-# Entry Point
-# =============================================================================
 
 main() {
     ensure-root

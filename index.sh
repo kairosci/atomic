@@ -1,11 +1,10 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Fedora Atomic Manager
 
 set -euo pipefail
 
-TARGET_FILE="${BASH_SOURCE[0]}"
-[[ -L "$TARGET_FILE" ]] && TARGET_FILE="$(readlink -f "$TARGET_FILE")"
-readonly SCRIPT_DIR="$(cd "$(dirname "$TARGET_FILE")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 
 source "$SCRIPT_DIR/lib/common.sh"
 
@@ -13,17 +12,18 @@ show-menu() {
     local distro
     distro="$(detect-distro)"
     
-    printf "${BOLD}${BLUE}--------------------------------${NC}\n"
+    printf "${BOLD}${BLUE}***************************${NC}\n"
     printf "${BOLD}     FEDORA ATOMIC MANAGER${NC}\n"
-    printf "        Mode: ${BLUE}%s${NC}\n" "$distro"
-    printf "${BOLD}${BLUE}--------------------------------${NC}\n"
+    printf "        Flavour: ${BLUE}%s${NC}\n" "$distro"
+    printf "${BOLD}${BLUE}***************************${NC}\n"
     printf "\n"
     printf "  [1] Optimize System\n"
     printf "  [2] Update System\n"
     printf "  [3] Delete Folder\n"
     printf "  [4] Folder Protection\n"
     printf "  [5] Switch Distro\n"
-    printf "  [6] ${RED}Exit${NC}\n"
+    printf "  [6] Deep Clean\n"
+    printf "  [7] ${RED}Exit${NC}\n"
     printf "\n"
 }
 
@@ -46,7 +46,8 @@ main() {
             3) confirm "Delete folder?" && "$SCRIPT_DIR/utils/delete-folder.sh" ;;
             4) confirm "Toggle folder protection?" && "$SCRIPT_DIR/utils/toggle-folder-protection.sh" ;;
             5) confirm "Switch distro?" && "$SCRIPT_DIR/utils/switch-distro.sh" ;;
-            6) log-info "Exiting..."; exit 0 ;;
+            6) confirm "Deep clean home (risk of data loss)?" && "$SCRIPT_DIR/utils/deep-clean.sh" ;;
+            7) log-info "Exiting..."; exit 0 ;;
             *) log-warn "Invalid option: $choice" ;;
         esac
         

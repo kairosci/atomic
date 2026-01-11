@@ -1,24 +1,25 @@
-#!/usr/bin/bash
-# =============================================================================
+#!/usr/bin/env zsh
+# *****************************************************************************
 # Set Oh My Zsh
 # Installs Oh My Zsh, removes Oh My Bash, and configures Zsh as default
-# =============================================================================
+# *****************************************************************************
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
-# =============================================================================
+# *****************************************************************************
 # Constants
-# =============================================================================
+# *****************************************************************************
 
 readonly OMZ_INSTALL_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 readonly ZSH_PATH="/usr/bin/zsh"
 
-# =============================================================================
+# *****************************************************************************
 # Main Functions
-# =============================================================================
+# *****************************************************************************
 
 cleanup-omb() {
     local user_home
@@ -105,15 +106,55 @@ configure-zshrc() {
     fi
 }
 
-# =============================================================================
+configure-aliases() {
+    local user_home
+    user_home="$(get-user-home)"
+    local zshrc="$user_home/.zshrc"
+    
+    log-info "Configuring custom aliases..."
+    
+    if ! grep -q "alias ll=" "$zshrc"; then
+        cat << 'EOF' >> "$zshrc"
+
+# Custom Operations
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# System Maintenance
+alias update='sudo rpm-ostree upgrade'
+alias clean='rpm-ostree cleanup -m && flatpak uninstall --unused'
+alias y='yes'
+
+# Safety
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias .3='cd ../../..'
+alias .4='cd ../../../..'
+EOF
+        log-success "Custom aliases added"
+    else
+        log-info "Aliases already present, skipping..."
+    fi
+
+    # Git aliases are provided by the 'git' plugin in Oh My Zsh
+}
+
+# *****************************************************************************
 # Entry Point
-# =============================================================================
+# *****************************************************************************
 
 main() {
     ensure-root
     cleanup-omb
     install-omz
     configure-zshrc
+    configure-aliases
     set-default-shell
 }
 

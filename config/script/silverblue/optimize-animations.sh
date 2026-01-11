@@ -1,9 +1,10 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Optimize Animations (Silverblue)
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
 optimize-animations() {

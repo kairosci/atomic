@@ -1,25 +1,36 @@
-# Fedora Atomic Config
+# Atomic Manager (v2.0)
 
 Configuration scripts for **Fedora Kionite** (KDE) and **Fedora Silverblue** (GNOME) with automatic distro detection.
 
 ## Features
 
-| Feature                               | Kionite | Silverblue |
-|---------------------------------------|:-------:|:----------:|
-| Distro Auto Detection                 | ✓       | ✓          |
-| Remove Bloatware                      | ✓       | ✓          |
-| Brave Browser                         | ✓       | ✓          |
-| Flatpak Apps (Discord, Antigravity)   | ✓       | ✓          |
-| TLP Power Management                  | ✓       | ✓          |
-| Distrobox + libvirt/QEMU              | ✓       | ✓          |
-| Papirus Icons + Flatpak Override      | ✓       | ✓          |
-| OS Optimization (kernel, services)    | ✓       | ✓          |
-| GNOME Extensions                      | —       | ✓          |
+## Features
+
+Atomic Manager automatically detects your distribution (**Fedora Silverblue** or **Fedora Kionite**) and applies the appropriate configuration.
+
+### Core Configuration
+
+- **Automatic Detection**: Adapts scripts based on the running OS (GNOME vs KDE).
+- **Zsh Environment**: Sets up Zsh with Oh My Zsh for a superior shell experience.
+- **System Optimization**: Configures kernel parameters, services, and TLP for battery life.
+- **Deep Clean**: Utilities to reset user configuration and clean up the home directory.
+
+### Applications & Development
+
+- **Toolbox Integration**: Sets up a Fedora-based `toolbox` container for development (Node.js, dev tools), keeping the base system clean.
+- **Browsers**: Installs Brave Browser.
+- **Flatpak Management**: Installs curated Flatpak apps (Discord, etc.) and applies overrides (Papirus Icons).
+- **Virtualization**: Sets up libvirt/QEMU for VM management.
+
+### Desktop Enhancements
+
+- **GNOME Extensions** (Silverblue): Configures Dash to Dock, AppIndicator, Blur my Shell, Just Perfection, and Caffeine.
+- **Bloatware Removal**: Removes unnecessary pre-installed applications for a slimmer system.
 
 ## Installation
 
 ```bash
-git clone https://github.com/kairosci/atomic.git
+git clone https://github.com/redigere/atomic.git
 cd atomic
 sudo ./setup.sh
 ```
@@ -54,7 +65,7 @@ sudo atomic
 
 ## Notes
 
-- Dev tools should be in **Distrobox**, not base system
+- Development tools should be installed in **Toolbox**, not on the immutable base system.
 
 ## License
 
