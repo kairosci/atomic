@@ -8,7 +8,7 @@ set -euo pipefail
 
 readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
-source "$SCRIPT_DIR/../lib/common.sh"
+source "$SCRIPT_DIR/../../lib/common.sh"
 
 # *****************************************************************************
 # Constants
@@ -29,10 +29,10 @@ main() {
     
     if [[ -f "$anchor_path" ]]; then
         log-info "Protection is currently: ACTIVE. Disabling..."
-        "$SCRIPT_DIR/unset-folder-protection.sh"
+        "$SCRIPT_DIR/unset.sh"
     else
         log-info "Protection is currently: INACTIVE. Enabling..."
-        "$SCRIPT_DIR/set-folder-protection.sh"
+        "$SCRIPT_DIR/set.sh"
     fi
 }
 
