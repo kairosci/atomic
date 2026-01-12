@@ -25,7 +25,7 @@ readonly -a SERVICES_TO_MASK=(
 # @return void
 disable-services() {
     log-info "Disabling unnecessary services..."
-    
+
     local service_name
     for service_name in "${SERVICES_TO_DISABLE[@]}"; do
         if systemctl is-enabled "$service_name" &>/dev/null; then
@@ -33,12 +33,12 @@ disable-services() {
             log-info "Disabled: $service_name"
         fi
     done
-    
+
     for service_name in "${SERVICES_TO_MASK[@]}"; do
         systemctl mask "$service_name" 2>/dev/null || log-warn "Failed to mask service: $service_name"
         log-info "Masked: $service_name"
     done
-    
+
     log-success "Services optimized"
 }
 
@@ -48,9 +48,9 @@ disable-services() {
 # @return void
 configure-sysctl() {
     log-info "Applying kernel optimizations..."
-    
+
     local sysctl_config_file="/etc/sysctl.d/99-performance.conf"
-    
+
     cat > "$sysctl_config_file" <<'EOF'
 # Swappiness (100 for ZRAM to avoid file eviction)
 vm.swappiness=100
@@ -86,7 +86,7 @@ EOF
 # @return void
 configure-cpu-governor() {
     log-info "Optimizing CPU governor..."
-    
+
     # Try to set via cpupower if available, otherwise sysfs
     if command-exists cpupower; then
         cpupower frequency-set -g performance &>/dev/null || log-warn "cpupower failed"
@@ -107,7 +107,7 @@ configure-cpu-governor() {
 # @return void
 configure-io-scheduler() {
     log-info "Optimizing I/O scheduler..."
-    
+
     # Apply to all non-loop block devices
     for dev in /sys/block/sd*(N) /sys/block/nvme*n*(N); do
         if [[ -f "$dev/queue/scheduler" ]]; then
@@ -119,7 +119,7 @@ configure-io-scheduler() {
             fi
         fi
     done
-    
+
     # Persistent udev rule for I/O scheduler
     cat > "/etc/udev/rules.d/60-io-scheduler.rules" <<'EOF'
 # NVMe SSDs
@@ -127,7 +127,7 @@ ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="bfq"
 # SATA/HDD
 ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/scheduler}="bfq"
 EOF
-    
+
     udevadm control --reload 2>/dev/null || true
     log-success "I/O scheduler optimized"
 }
@@ -141,15 +141,15 @@ configure-tlp() {
         log-info "TLP not installed, skipping"
         return
     fi
-    
+
     log-info "Enabling TLP..."
     systemctl enable --now tlp.service 2>/dev/null || log-warn "Failed to enable TLP service"
     systemctl mask systemd-rfkill.service systemd-rfkill.socket 2>/dev/null || log-warn "Failed to mask systemd-rfkill"
-    
+
     # Ensure TLP performance mode on AC
     sed -i 's/^CPU_SCALING_GOVERNOR_ON_AC=.*/CPU_SCALING_GOVERNOR_ON_AC="performance"/' /etc/tlp.conf 2>/dev/null || true
     sed -i 's/^CPU_ENERGY_PERF_POLICY_ON_AC=.*/CPU_ENERGY_PERF_POLICY_ON_AC="performance"/' /etc/tlp.conf 2>/dev/null || true
-    
+
     log-success "TLP configured"
 }
 
@@ -160,23 +160,45 @@ configure-tlp() {
 disable-gnome-software-autostart() {
     local autostart_directory="/etc/xdg/autostart"
     local gnome_software_desktop_entry="$autostart_directory/org.gnome.Software.desktop"
-    
+
     if [[ -f "$gnome_software_desktop_entry" ]]; then
         log-info "Disabling GNOME Software autostart..."
         echo "Hidden=true" >> "$gnome_software_desktop_entry" 2>/dev/null || log-warn "Failed to disable GNOME Software autostart"
     fi
 }
 
+# Sets up the development toolbox container.
+#
+# Invokes set-toolbox-dev.sh as the original user (not root).
+# @return void
+setup-dev-toolbox() {
+    log-info "Setting up development toolbox..."
+
+    local toolbox_script="$SCRIPT_DIR/set-toolbox-dev.sh"
+
+    if [[ -f "$toolbox_script" ]]; then
+        # We need to run this as the regular user, not root
+        if [[ -n "${SUDO_USER:-}" ]]; then
+            sudo -u "$SUDO_USER" zsh "$toolbox_script" || log-warn "Failed to setup dev toolbox"
+        else
+            log-warn "SUDO_USER not set, cannot run toolbox setup as non-root user. Skipping."
+        fi
+    else
+        log-warn "Toolbox setup script not found at $toolbox_script"
+    fi
+}
+
 main() {
     ensure-root
-    
+
     disable-services
     configure-sysctl
     configure-cpu-governor
     configure-io-scheduler
     configure-tlp
     disable-gnome-software-autostart
-    
+    setup-dev-toolbox
+
     log-success "System optimized"
 }
 

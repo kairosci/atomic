@@ -33,17 +33,17 @@ readonly -a APPS_TO_INSTALL=(
 
 remove-defaults() {
     local distro="$1"
-    
+
     log-info "Removing default Flatpak apps for $distro"
-    
+
     local -a valid_apps=()
     local installed_apps
     installed_apps="$(flatpak list --app --columns=application 2>/dev/null || true)"
-    
+
     for app in "${COMMON_APPS_TO_REMOVE[@]}"; do
         echo "$installed_apps" | grep -q "$app" && valid_apps+=("$app")
     done
-    
+
     case "$distro" in
         kionite)
             for app in "${KIONITE_APPS_TO_REMOVE[@]}"; do
@@ -73,7 +73,7 @@ remove-defaults() {
             done
             ;;
     esac
-    
+
     if [[ ${#valid_apps[@]} -gt 0 ]]; then
         flatpak uninstall --delete-data -y "${valid_apps[@]}"
         log-success "Default apps removed"
@@ -90,7 +90,7 @@ setup-remotes() {
 
 install-apps() {
     log-info "Installing Flatpak apps"
-    
+
     if [[ ${#APPS_TO_INSTALL[@]} -gt 0 ]]; then
         flatpak install flathub "${APPS_TO_INSTALL[@]}" -y || true
         log-success "Apps installed"
@@ -103,9 +103,9 @@ main() {
     ensure-root
     local distro
     distro="$(detect-distro)"
-    
+
     log-info "Detected distro: $distro"
-    
+
     remove-defaults "$distro"
     setup-remotes
     install-apps

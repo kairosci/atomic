@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
-# *****************************************************************************
 # Fedora Atomic Setup
 # Installs Atomic Manager and configures global access
-# *****************************************************************************
 
 set -euo pipefail
 
@@ -26,33 +24,33 @@ set-permissions() {
 
 install-symlink() {
     log-info "Installing symlink..."
-    
+
     # Use /usr/local/bin as /usr/bin is read-only on Silverblue/Kionite
     local link_path="/usr/local/bin/atomic"
-    
+
     # Ensure /usr/local/bin exists
     if [[ ! -d "/usr/local/bin" ]]; then
         mkdir -p "/usr/local/bin"
     fi
-    
+
     if [[ -L "$link_path" ]]; then
         rm "$link_path"
     fi
-    
+
     ln -s "$SCRIPT_DIR/index.sh" "$link_path"
-    
+
     if [[ -x "$link_path" ]]; then
         log-success "Symlink created at $link_path"
     else
         log-error "Failed to create symlink"
         exit 1
     fi
-    
+
     # Cleanup old aliases if they exist
     local user_home
     user_home="$(get-user-home)"
     local bashrc="$user_home/.bashrc"
-    
+
     if [[ -f "$bashrc" ]]; then
         if grep -q "alias atomic=" "$bashrc" || grep -q "alias kionite=" "$bashrc"; then
             log-info "Cleaning up old aliases from .bashrc..."
@@ -68,16 +66,16 @@ install-symlink() {
 
 main() {
     ensure-root
-    
+
     local distro
     distro="$(detect-distro)"
-    
+
     log-info "Installing Fedora Atomic Manager..."
     log-info "Detected: $distro"
-    
+
     set-permissions
     install-symlink
-    
+
     log-success "Installation completed!"
     log-info "You can now run 'atomic' from anywhere (after restarting terminal)."
 }
