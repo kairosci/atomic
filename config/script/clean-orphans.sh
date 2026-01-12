@@ -58,7 +58,8 @@ scan-directory() {
         else
             echo -e "\e[33m[ORPHAN?]\e[0m $dir_name"
             
-            read -p "    Delete '$dir_name'? [y/N] " -n 1 -r
+            printf "    Delete '%s'? [y/N] " "$dir_name"
+            read -k 1 -r REPLY
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 log-info "Deleting $dir_name..."
@@ -90,7 +91,8 @@ main() {
             
             if ! flatpak list --app --columns=application | grep -q "^$app_id$"; then
                 echo -e "\e[33m[ORPHAN FLATPAK]\e[0m $app_id"
-                read -p "    Delete data for uninstalled Flatpak '$app_id'? [y/N] " -n 1 -r
+                printf "    Delete data for uninstalled Flatpak '%s'? [y/N] " "$app_id"
+                read -k 1 -r REPLY
                 echo
                 if [[ $REPLY =~ ^[Yy]$ ]]; then
                     log-info "Deleting $app_id data..."
