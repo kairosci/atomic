@@ -9,6 +9,7 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 readonly -a COMMON_PACKAGES_TO_REMOVE=(
     "firefox" "firefox-langpacks"
+    "btop"
 )
 
 readonly -a COMMON_PACKAGES_TO_INSTALL=(
@@ -58,7 +59,7 @@ readonly -a COSMIC_PACKAGES_TO_INSTALL=(
 
 remove-base-packages() {
     local distro="$1"
-    local -n packages_ref="$2"
+    local packages_ref="$2"
     
     log-info "Removing base packages for $distro"
     
@@ -66,7 +67,7 @@ remove-base-packages() {
     local ostree_status
     ostree_status="$(rpm-ostree status)"
     
-    for pkg in "${packages_ref[@]}"; do
+    for pkg in "${(@P)packages_ref}"; do
         if rpm -q "$pkg" &>/dev/null; then
             if echo "$ostree_status" | grep -Fq "$pkg"; then
                 log-info "Skipping $pkg (already has override)"
@@ -113,12 +114,12 @@ EOL
 }
 
 install-packages() {
-    local -n packages_ref="$1"
+    local packages_ref="$1"
     
     log-info "Installing packages"
     
-    if [[ ${#packages_ref[@]} -gt 0 ]]; then
-        rpm-ostree install --idempotent --allow-inactive "${packages_ref[@]}"
+    if [[ ${#${(@P)packages_ref}} -gt 0 ]]; then
+        rpm-ostree install --idempotent --allow-inactive "${(@P)packages_ref}"
         log-success "Packages installed"
     fi
 }

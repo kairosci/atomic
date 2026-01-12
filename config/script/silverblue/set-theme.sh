@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Set Themes (Orchis + Papirus)
 # Installs Orchis GTK theme and Papirus Icons
 
@@ -26,7 +26,7 @@ install-orchis() {
     git clone --depth 1 "$ORCHIS_REPO" "$work_dir/orchis"
     
     pushd "$work_dir/orchis" > /dev/null
-    ./install.sh -t all -c dark
+    ./install.sh -t all -c dark --shell --libadwaita
     popd > /dev/null
     
     rm -rf "$work_dir"
@@ -46,6 +46,9 @@ apply-theme() {
     
     # Set Dark Mode
     dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+
+    # Set Shell Theme (requires user-theme extension)
+    dconf write /org/gnome/shell/extensions/user-theme/name "'Orchis-Dark'"
     
     log-success "Visual settings applied"
 }
@@ -57,6 +60,7 @@ override-flatpak-icons() {
     flatpak override --user --filesystem=/usr/share/icons:ro
     flatpak override --user --filesystem=~/.themes:ro
     flatpak override --user --filesystem=~/.local/share/themes:ro
+    flatpak override --user --env=GTK_THEME="$GTK_THEME"
     log-success "Flatpak permissions updated"
 }
 
