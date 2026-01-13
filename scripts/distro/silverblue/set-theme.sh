@@ -28,7 +28,8 @@ install-orchis() {
 
     pushd "$work_dir/orchis" > /dev/null
     # Install Dark and Light variants only (default Blue flavour)
-    ./install.sh -t all -c dark --shell --libadwaita
+    ./install.sh -c dark --shell --libadwaita
+    ./install.sh -c light --shell --libadwaita
     popd > /dev/null
 
     rm -rf "$work_dir"
