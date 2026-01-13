@@ -23,7 +23,8 @@ show-menu() {
     printf "  [4] Folder Protection\n"
     printf "  [5] Switch Distro\n"
     printf "  [6] Deep Clean\n"
-    printf "  [7] ${RED}Exit${NC}\n"
+    printf "  [7] Install IDEs\n"
+    printf "  [8] ${RED}Exit${NC}\n"
     printf "\n"
 }
 
@@ -49,7 +50,8 @@ main() {
             4) confirm "Toggle folder protection?" && "$SCRIPT_DIR/scripts/utils/folder-protection/main.sh" ;;
             5) confirm "Switch distro?" && "$SCRIPT_DIR/scripts/utils/switch-distro.sh" ;;
             6) confirm "Deep clean home (risk of data loss)?" && "$SCRIPT_DIR/scripts/utils/deep-clean.sh" ;;
-            7) log-info "Exiting..."; exit 0 ;;
+            7) confirm "Install IDEs (IntelliJ, CLion, Android Studio)?" && "$SCRIPT_DIR/scripts/utils/install-ides.sh" ;;
+            8) log-info "Exiting..."; exit 0 ;;
             *) log-warn "Invalid option: $choice" ;;
         esac
 
