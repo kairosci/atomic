@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
-# Set Flatpak Apps
+# @file set-flatpak.sh
+# @brief Manages Flatpak apps installation and removal
+# @description
+#   Removes default Flatpak apps per distro and installs common apps.
 
 set -euo pipefail
 
@@ -31,13 +34,14 @@ readonly -a APPS_TO_INSTALL=(
     "net.nokyan.Resources"
 )
 
+# @description Removes default Flatpak apps for a given distro.
+# @arg $1 string Distro name
 remove-defaults() {
     local distro="$1"
-
-    log-info "Removing default Flatpak apps for $distro"
-
     local -a valid_apps=()
     local installed_apps
+
+    log-info "Removing default Flatpak apps for $distro"
     installed_apps="$(flatpak list --app --columns=application 2>/dev/null || true)"
 
     for app in "${COMMON_APPS_TO_REMOVE[@]}"; do
@@ -82,12 +86,14 @@ remove-defaults() {
     fi
 }
 
+# @description Sets up Flathub remote.
 setup-remotes() {
     log-info "Setting up Flatpak remotes"
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     log-success "Remotes configured"
 }
 
+# @description Installs common Flatpak apps.
 install-apps() {
     log-info "Installing Flatpak apps"
 
@@ -99,6 +105,7 @@ install-apps() {
     fi
 }
 
+# @description Main entry point.
 main() {
     ensure-root
     local distro

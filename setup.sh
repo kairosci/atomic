@@ -1,16 +1,18 @@
 #!/usr/bin/env zsh
-# Fedora Atomic Setup
-# Installs Atomic Manager and configures global access
+# @file setup.sh
+# @brief Installs Fedora Atomic Manager
+# @description
+#   Sets up executable permissions and creates a global symlink
+#   for the atomic command.
 
 set -euo pipefail
 
-# Get script directory
 readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 
-# Source common library
 source "$SCRIPT_DIR/lib/common.sh"
 
+# @description Sets executable permissions on all scripts.
 set-permissions() {
     log-info "Setting executable permissions..."
     chmod +x "$SCRIPT_DIR/index.sh" \
@@ -23,13 +25,12 @@ set-permissions() {
              "$SCRIPT_DIR/lib/"*.sh 2>/dev/null || true
 }
 
+# @description Installs the atomic command symlink.
 install-symlink() {
     log-info "Installing symlink..."
 
-    # Use /usr/local/bin as /usr/bin is read-only on Silverblue/Kionite
     local link_path="/usr/local/bin/atomic"
 
-    # Ensure /usr/local/bin exists
     if [[ ! -d "/usr/local/bin" ]]; then
         mkdir -p "/usr/local/bin"
     fi
@@ -47,10 +48,9 @@ install-symlink() {
         exit 1
     fi
 
-    # Cleanup old aliases if they exist
-    local user_home
+    local user_home bashrc
     user_home="$(get-user-home)"
-    local bashrc="$user_home/.bashrc"
+    bashrc="$user_home/.bashrc"
 
     if [[ -f "$bashrc" ]]; then
         if grep -q "alias atomic=" "$bashrc" || grep -q "alias kionite=" "$bashrc"; then
@@ -65,6 +65,7 @@ install-symlink() {
     fi
 }
 
+# @description Main entry point.
 main() {
     ensure-root
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
-
-# Set Oh My Zsh
-# Installs Oh My Zsh, removes Oh My Bash, and configures Zsh as default
-
+# @file set-omz.sh
+# @brief Installs and configures Oh My Zsh
+# @description
+#   Removes Oh My Bash if present, installs Oh My Zsh,
+#   configures theme and aliases, and sets Zsh as default shell.
 
 set -euo pipefail
 
@@ -10,11 +11,10 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
-
 readonly OMZ_INSTALL_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 readonly ZSH_PATH="/usr/bin/zsh"
 
-
+# @description Removes Oh My Bash installation and cleans .bashrc.
 cleanup-omb() {
     local user_home
     user_home="$(get-user-home)"
@@ -33,14 +33,13 @@ cleanup-omb() {
     fi
 }
 
+# @description Installs Oh My Zsh.
 install-omz() {
-    local user_home
+    local user_home real_user omz_dir
     user_home="$(get-user-home)"
-    local real_user
     real_user="$(get-real-user)"
-    local omz_dir="$user_home/.oh-my-zsh"
+    omz_dir="$user_home/.oh-my-zsh"
 
-    # Check dependencies
     require-command git "git is required for Oh My Zsh"
     require-command curl "curl is required for Oh My Zsh"
 
@@ -51,7 +50,6 @@ install-omz() {
         return 0
     fi
 
-    # Install Oh My Zsh if missing
     if [[ ! -d "$omz_dir" ]]; then
         log-info "Installing Oh My Zsh..."
         curl -fsSL "$OMZ_INSTALL_URL" | sudo -u "$real_user" zsh -s -- --unattended > /dev/null 2>&1
@@ -61,6 +59,7 @@ install-omz() {
     fi
 }
 
+# @description Sets Zsh as default shell.
 set-default-shell() {
     local real_user
     real_user="$(get-real-user)"
@@ -75,10 +74,11 @@ set-default-shell() {
     fi
 }
 
+# @description Configures zsh theme to 'refined'.
 configure-zshrc() {
-    local user_home
+    local user_home zshrc
     user_home="$(get-user-home)"
-    local zshrc="$user_home/.zshrc"
+    zshrc="$user_home/.zshrc"
 
     if [[ ! -f "$zshrc" ]]; then
         log-warn ".zshrc not found, skipping theme configuration"
@@ -87,12 +87,10 @@ configure-zshrc() {
 
     log-info "Configuring zsh theme to 'refined'..."
 
-    # Change the theme from robbyrussell (default) to refined
     if grep -q 'ZSH_THEME="robbyrussell"' "$zshrc"; then
         sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="refined"/' "$zshrc"
         log-success "Theme set to 'refined'"
     elif grep -q 'ZSH_THEME=' "$zshrc"; then
-        # Replace any existing theme
         sed -i 's/ZSH_THEME="[^"]*"/ZSH_THEME="refined"/' "$zshrc"
         log-success "Theme updated to 'refined'"
     else
@@ -100,10 +98,11 @@ configure-zshrc() {
     fi
 }
 
+# @description Configures custom shell aliases.
 configure-aliases() {
-    local user_home
+    local user_home zshrc
     user_home="$(get-user-home)"
-    local zshrc="$user_home/.zshrc"
+    zshrc="$user_home/.zshrc"
 
     log-info "Configuring custom aliases..."
 
@@ -135,10 +134,9 @@ EOF
     else
         log-info "Aliases already present, skipping..."
     fi
-
-    # Git aliases are provided by the 'git' plugin in Oh My Zsh
 }
 
+# @description Main entry point.
 main() {
     ensure-root
     cleanup-omb

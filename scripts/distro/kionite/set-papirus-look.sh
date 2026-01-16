@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
-# Set Papirus Look (Kionite)
+# @file set-papirus-look.sh
+# @brief Applies Papirus theme and icons to Kionite
+# @description
+#   Configures KDE with Papirus icons, BreezeDark theme,
+#   window buttons on right, and optimized animations.
 
 set -euo pipefail
 
@@ -7,6 +11,11 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
+# @description Writes a KDE config value using kwriteconfig.
+# @arg $1 string Config file name
+# @arg $2 string Group name
+# @arg $3 string Key name
+# @arg $4 string Value
 apply-kwrite() {
     local file="$1" group="$2" key="$3" value="$4"
 
@@ -20,6 +29,7 @@ apply-kwrite() {
     log-warn "No kwriteconfig tool found."
 }
 
+# @description Reloads KWin configuration.
 reload-kwin() {
     for tool in qdbus6 qdbus qdbus-qt5; do
         if command -v "$tool" &>/dev/null; then
@@ -29,15 +39,14 @@ reload-kwin() {
     done
 }
 
+# @description Applies Papirus icons and BreezeDark theme.
 configure-theme() {
     log-info "Applying Papirus theme..."
 
     apply-kwrite "kdeglobals" "Icons" "Theme" "Papirus"
-    # Use default Breeze cursor as Papirus doesn't provide one
     apply-kwrite "kcminputrc" "Mouse" "cursorTheme" "breeze_cursors"
     apply-kwrite "kdeglobals" "General" "ColorScheme" "BreezeDark"
 
-    # Reset fonts to Fedora defaults (Noto Sans)
     local font="Noto Sans,10,-1,5,50,0,0,0,0,0"
     local font_mono="Noto Sans Mono,10,-1,5,50,0,0,0,0,0"
 
@@ -49,6 +58,7 @@ configure-theme() {
     apply-kwrite "kdeglobals" "General" "fixed" "$font_mono"
 }
 
+# @description Configures KWin window buttons on right side.
 configure-kwin() {
     log-info "Configuring window buttons (right side)..."
 
@@ -59,6 +69,7 @@ configure-kwin() {
     reload-kwin
 }
 
+# @description Optimizes KWin animations.
 configure-animations() {
     log-info "Optimizing animations..."
 
@@ -68,6 +79,7 @@ configure-animations() {
     reload-kwin
 }
 
+# @description Overrides Flatpak permissions for icons.
 override-flatpak-icons() {
     log-info "Overriding Flatpak icons..."
     flatpak override --user --filesystem=~/.icons:ro
@@ -76,6 +88,7 @@ override-flatpak-icons() {
     log-success "Flatpak icons overridden"
 }
 
+# @description Main entry point.
 main() {
     ensure-user
 

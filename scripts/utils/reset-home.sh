@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
-# Reset User Home
-# Aggressively cleans the home directory, preserving only essential configs.
+# @file reset-home.sh
+# @brief Resets user home directory
+# @description
+#   Aggressively cleans the home directory, preserving only
+#   essential configurations (.ssh, .gnupg, .gitconfig, etc.).
 
 set -euo pipefail
 
@@ -8,6 +11,7 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
+# @description Resets home directory, preserving essential configs.
 reset-home() {
     local user_home
     user_home="$(get-user-home)"
@@ -26,15 +30,13 @@ reset-home() {
         return 0
     fi
 
-    local timestamp
+    local timestamp backup_dir whitelist_pattern
     timestamp="$(date +%Y%m%d_%H%M%S)"
-    local backup_dir="$user_home/config_backup_$timestamp"
+    backup_dir="$user_home/config_backup_$timestamp"
+    whitelist_pattern="^(\.ssh|\.gnupg|\.gitconfig|\.zshrc|\.pki|\.local|\.mozilla)$"
 
     log-info "Creating safety backup at $backup_dir (just in case)..."
     mkdir -p "$backup_dir"
-
-    # Whitelist important configurations
-    local whitelist_pattern="^(\.ssh|\.gnupg|\.gitconfig|\.zshrc|\.pki|\.local|\.mozilla)$"
 
     setopt DOT_GLOB
 
@@ -47,17 +49,16 @@ reset-home() {
             log-info "Preserving: $basename"
 
             if [[ "$basename" == ".local" ]]; then
-                 log-info "Cleaning .local..."
+                log-info "Cleaning .local..."
+                cp -r "$item" "$backup_dir/" 2>/dev/null || true
 
-                 cp -r "$item" "$backup_dir/" 2>/dev/null || true
-
-                 for sub in "$item"/*; do
-                     local subname="${sub##*/}"
-                     if [[ "$subname" != "bin" ]]; then
-                         rm -rf "$sub"
-                         echo "Deleted: .local/$subname"
-                     fi
-                 done
+                for sub in "$item"/*; do
+                    local subname="${sub##*/}"
+                    if [[ "$subname" != "bin" ]]; then
+                        rm -rf "$sub"
+                        echo "Deleted: .local/$subname"
+                    fi
+                done
             fi
             continue
         fi
@@ -73,11 +74,9 @@ reset-home() {
     log-info "Backup stored at: $backup_dir"
 }
 
+# @description Main entry point.
 main() {
     ensure-user
-    # If run directly suitable for confirm, but if run from switch-distro we might assume confirmation?
-    # The requirement was "When I switch image... I want to eliminate old configurations".
-    # We will invoke this function.
     reset-home
 }
 

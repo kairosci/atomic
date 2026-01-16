@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
-
-# Disable Plasma Emojier
-# Hides the KDE emoji selector via local desktop override
-
+# @file disable-emojier.sh
+# @brief Hides the KDE Plasma emoji selector
+# @description
+#   Creates a local desktop override to hide plasma-emojier.
 
 set -euo pipefail
 
@@ -10,14 +10,14 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
+# @description Disables plasma-emojier via local desktop override.
 disable-plasma-emojier() {
     log-info "Disabling plasma-emojier"
 
-    local user_home
+    local user_home apps_dir desktop_file
     user_home="$(get-user-home)"
-
-    local apps_dir="$user_home/.local/share/applications"
-    local desktop_file="$apps_dir/org.kde.plasma.emojier.desktop"
+    apps_dir="$user_home/.local/share/applications"
+    desktop_file="$apps_dir/org.kde.plasma.emojier.desktop"
 
     mkdir -p "$apps_dir"
 
@@ -36,6 +36,7 @@ EOF
     fi
 }
 
+# @description Main entry point.
 main() {
     disable-plasma-emojier
 }
