@@ -23,3 +23,4 @@ ms-vscode-remote.remote-containers
 ms-vscode.vscode-theme-defaults
 ms-vscode.vscode-theme-seti
 dracula-theme.theme-dracula
+mads-hartmann.bash-ide-vscode
