@@ -155,20 +155,50 @@ apply-theme() {
 #######################################
 # Overrides Flatpak permission to allow theme access.
 # grants read-only access to icon and theme directories.
+# Also applies GTK CSS overrides to Flatpak apps.
 # Globals:
 #   GTK_THEME
 # Arguments:
 #   None
 #######################################
 override-flatpak-icons() {
-    log-info "Overriding Flatpak icons..."
+    log-info "Overriding Flatpak icons and theme..."
+
+    # Filesystem access for themes and icons
     flatpak override --user --filesystem=~/.icons:ro
     flatpak override --user --filesystem=~/.local/share/icons:ro
     flatpak override --user --filesystem=/usr/share/icons:ro
     flatpak override --user --filesystem=~/.themes:ro
     flatpak override --user --filesystem=~/.local/share/themes:ro
+
+    # GTK config access for CSS overrides
+    flatpak override --user --filesystem=~/.config/gtk-3.0:ro
+    flatpak override --user --filesystem=~/.config/gtk-4.0:ro
+
+    # Set GTK theme environment variable
     flatpak override --user --env=GTK_THEME="$GTK_THEME"
-    log-success "Flatpak permissions updated"
+
+    # Apply CSS overrides to Flatpak app data directories
+    log-info "Applying CSS overrides to Flatpak apps..."
+
+    if [[ -d "$HOME/.var/app" ]]; then
+        for app_dir in "$HOME/.var/app"/*; do
+            [[ -d "$app_dir" ]] || continue
+
+            for gtk_ver in "gtk-3.0" "gtk-4.0"; do
+                local src_css="$HOME/.config/$gtk_ver/gtk.css"
+                local dest_dir="$app_dir/config/$gtk_ver"
+
+                if [[ -f "$src_css" ]]; then
+                    mkdir -p "$dest_dir"
+                    cp -f "$src_css" "$dest_dir/gtk.css"
+                fi
+            done
+        done
+        log-success "CSS overrides applied to Flatpak apps"
+    fi
+
+    log-success "Flatpak permissions and theme updated"
 }
 
 #######################################
