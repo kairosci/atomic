@@ -65,8 +65,18 @@ readonly -a COMMON_SHARE_DIRS=(
 
 # @description Cleans system journals and rpm-ostree cache.
 system-cleanup() {
-    log-info "System cleanup"
-    journalctl --vacuum-files=0
+    if ! command-exists journalctl; then
+        log-warn "journalctl not available, skipping journal cleanup"
+    else
+        log-info "System cleanup"
+        journalctl --vacuum-files=0
+    fi
+
+    if ! command-exists rpm-ostree; then
+        log-warn "rpm-ostree not available, skipping cache cleanup"
+        return 0
+    fi
+
     rpm-ostree cleanup --base --rollback -m
     log-success "System cleaned"
 }
@@ -107,6 +117,7 @@ remove-user-configs() {
 
 # @description Upgrades the system via rpm-ostree.
 system-upgrade() {
+    command-exists rpm-ostree || { log-warn "rpm-ostree not available, skipping upgrade"; return 0; }
     log-info "Upgrading system"
     rpm-ostree reload
     rpm-ostree refresh-md
@@ -116,6 +127,7 @@ system-upgrade() {
 
 # @description Performs Flatpak maintenance: uninstall unused and update.
 flatpak-maintenance() {
+    command-exists flatpak || { log-warn "flatpak not available, skipping maintenance"; return 0; }
     log-info "Flatpak maintenance"
     flatpak uninstall --unused --delete-data -y || log-warn "Failed to uninstall unused flatpaks"
     flatpak update -y

@@ -107,6 +107,7 @@ install-apps() {
 
 # @description Main entry point.
 main() {
+    command-exists flatpak || { log-warn "flatpak not available, skipping"; return 0; }
     ensure-root
     local distro
     distro="$(detect-distro)"

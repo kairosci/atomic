@@ -12,6 +12,7 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 # @description Renames BTRFS labels to 'fedora'.
 rename-btrfs-labels() {
+    command-exists btrfs || { log-warn "btrfs not available, skipping"; return 0; }
     ensure-root
     log-info "Renaming BTRFS labels"
 

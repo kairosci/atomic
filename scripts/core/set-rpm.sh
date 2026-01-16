@@ -121,6 +121,7 @@ install-packages() {
 
 # @description Main entry point.
 main() {
+    command-exists rpm-ostree || { log-warn "rpm-ostree not available, skipping"; return 0; }
     ensure-root
     local distro
     distro="$(detect-distro)"
@@ -144,8 +145,8 @@ main() {
             install-packages COSMIC_PACKAGES_TO_INSTALL
             ;;
         *)
-            log-error "Unknown distro: $distro"
-            exit 1
+            log-warn "Unknown distro: $distro, skipping RPM management"
+            return 0
             ;;
     esac
 }
