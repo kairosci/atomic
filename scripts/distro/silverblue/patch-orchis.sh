@@ -16,8 +16,8 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
-# @description Border radius for app UI elements (sharp)
-readonly APP_RADIUS="0px"
+# @description Border radius for app UI elements (sharp but subtle)
+readonly APP_RADIUS="4px"
 
 # @description Border radius for window decorations (subtle)
 readonly WINDOW_RADIUS="4px"

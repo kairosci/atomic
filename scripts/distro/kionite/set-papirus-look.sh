@@ -50,10 +50,10 @@ configure-theme() {
 }
 
 configure-kwin() {
-    log-info "Configuring window buttons (left side)..."
+    log-info "Configuring window buttons (right side)..."
 
-    apply-kwrite "kwinrc" "org.kde.kdecoration2" "ButtonsOnLeft" "XIA"
-    apply-kwrite "kwinrc" "org.kde.kdecoration2" "ButtonsOnRight" "M"
+    apply-kwrite "kwinrc" "org.kde.kdecoration2" "ButtonsOnLeft" "M"
+    apply-kwrite "kwinrc" "org.kde.kdecoration2" "ButtonsOnRight" "IAX"
     apply-kwrite "kwinrc" "TabBox" "LayoutName" "thumbnail_grid"
 
     reload-kwin
