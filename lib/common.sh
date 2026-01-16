@@ -69,6 +69,18 @@ ensure-user() {
     fi
 }
 
+# @description Exits if not running on a supported Fedora Atomic system.
+require-fedora-atomic() {
+    local distro
+    distro="$(detect-distro)"
+
+    if [[ "$distro" == "unknown" ]]; then
+        log-error "This script requires Fedora Atomic (Silverblue, Kinoite, or Cosmic)"
+        log-error "Detected: unknown. Exiting."
+        exit 1
+    fi
+}
+
 log-info() {
   printf "${BLUE}[INFO]${NC} %s\n" "$*";
 }
@@ -200,7 +212,9 @@ show-execution-summary() {
     done
 
     echo ""
-    if [[ $fail_count -eq 0 ]]; then
+    if [[ $success_count -eq 0 ]] && [[ $fail_count -eq 0 ]]; then
+        log-info "No scripts were executed."
+    elif [[ $fail_count -eq 0 ]]; then
         log-success "All $success_count script(s) completed successfully."
     else
         log-warn "$success_count passed, $fail_count failed."

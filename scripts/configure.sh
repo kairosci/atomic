@@ -25,6 +25,8 @@ get-distro-dir() {
 
 # @description Runs all configuration scripts for the detected distro.
 run-scripts() {
+    require-fedora-atomic
+
     local distro core_dir distro_dir
     distro="$(detect-distro)"
     core_dir="$(get-core-dir)"
@@ -44,7 +46,6 @@ run-scripts() {
         "$core_dir/manage-system.sh"
         "$core_dir/set-safe-delete.sh"
         "$core_dir/set-omz.sh"
-        "$core_dir/set-codium.sh"
         "$core_dir/optimize-system.sh"
     )
 
