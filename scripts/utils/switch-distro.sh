@@ -36,7 +36,7 @@ switch-distro() {
     echo "  [3] Cosmic (COSMIC DE)"
     echo "  [4] Cancel"
 
-    read -rp "> " choice
+    read -r "choice?> "
 
     local target_distro="" target_ref=""
 
@@ -74,7 +74,7 @@ switch-distro() {
     log-warn "Any layered packages incompatible with the new desktop environment might cause issues."
     echo ""
 
-    read -rp "Are you sure you want to proceed? (y/N) " confirm
+    read -r "confirm?Are you sure you want to proceed? (y/N) "
     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
         log-info "Operation cancelled."
         exit 0

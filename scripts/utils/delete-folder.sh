@@ -12,7 +12,7 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 
 # @description Deletes folders matching a user-provided pattern.
 delete-folders() {
-    read -rp "Folder name pattern: " folder_name
+    read -r "folder_name?Folder name pattern: "
 
     if [[ -z "$folder_name" ]]; then
         log-error "No folder name provided"
@@ -20,7 +20,7 @@ delete-folders() {
     fi
 
     log-warn "This will delete all folders matching '*$folder_name*'"
-    read -rp "Continue? [y/N] " confirm
+    read -r "confirm?Continue? [y/N] "
 
     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
         log-info "Cancelled"
