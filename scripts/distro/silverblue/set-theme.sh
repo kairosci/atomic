@@ -8,8 +8,8 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
-readonly ICON_THEME="Papirus-Dark" # Ensure we use Dark icons
-readonly GTK_THEME="Orchis-Dark-Compact" # We will install the compact version
+readonly ICON_THEME="Papirus-Dark"
+readonly GTK_THEME="Orchis-Dark"
 readonly ORCHIS_REPO="https://github.com/vinceliuice/Orchis-theme.git"
 readonly THEME_DIR="$HOME/.local/share/themes"
 readonly FONT_DIR="$HOME/.local/share/fonts"
@@ -79,7 +79,7 @@ install-orchis() {
 
     # Install Dark variants with premium tweaks
     # -c dark: Dark color scheme
-    # -s compact: Compact size variant
+
     # --tweaks: solid (no transparency), black (full black), primary (themed radio buttons)
     ./install.sh -c dark -s compact --tweaks solid black primary
 
@@ -96,7 +96,7 @@ install-orchis() {
 #######################################
 # Removes unused Orchis theme variants.
 # Iterates through the theme directory and removes any variant
-# that is not our target 'Orchis-Dark-Compact'.
+# that is not our target 'Orchis-Dark'.
 # Globals:
 #   THEME_DIR
 # Arguments:
@@ -109,7 +109,7 @@ clean-orchis-variants() {
             local theme_name
             theme_name="$(basename "$theme_path")"
             # Keep only the specifically installed variant (and maybe standard Dark as fallback if needed, but we want strict adherence)
-            if [[ "$theme_name" != "Orchis-Dark-Compact" ]]; then
+            if [[ "$theme_name" != "Orchis-Dark" ]]; then
                 log-info "Removing unused variant: $theme_name"
                 rm -rf "$theme_path"
             fi
@@ -139,7 +139,7 @@ apply-theme() {
     dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
 
     # Ensure Shell matches the dark theme (User Theme extension must be enabled)
-    # The install script usually names the shell theme "Orchis-Dark-Compact" if installed with those flags
+    # The install script usually names the shell theme "Orchis-Dark" if installed with those flags
     dconf write /org/gnome/shell/extensions/user-theme/name "'$GTK_THEME'"
 
     # Set Fonts
@@ -213,6 +213,7 @@ main() {
     clean-orchis-variants
     apply-theme
     override-flatpak-icons
+    "$SCRIPT_DIR/../../utils/toolbox-sync-theme.sh"
 }
 
 main "$@"
