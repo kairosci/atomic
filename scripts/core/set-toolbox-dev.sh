@@ -40,77 +40,37 @@ create-or-update-container() {
 install-vscode() {
     log-info "Installing VSCode extensions..."
 
-    # List of extensions to install
-    local extensions=(
-        "ms-python.python"
-        "ms-vscode.vscode-typescript-next"
-        "ms-vscode.cpptools"
-        "ms-vscode.cmake-tools"
-        "llvm-vs-code-extensions.vscode-clangd"
-        "golang.go"
-        "rust-lang.rust-analyzer"
-        "rust-lang.rust"
-        "ms-vscode.vscode-java-pack"
-        "ms-vscode.vscode-json"
-        "ms-vscode.vscode-yaml"
-        "ms-vscode.vscode-xml"
-        "ms-vscode.vscode-eslint"
-        "bradlc.vscode-tailwindcss"
-        "esbenp.prettier-vscode"
-        "ms-vscode.vscode-css-peek"
-        "ms-vscode.vscode-html-css-support"
-        "ms-vscode.vscode-css-intellisense"
-        "ms-vscode.vscode-js-debug"
-        "ms-vscode.vscode-node-debug"
-        "ms-vscode.vscode-chrome-debug-core"
-        "ms-vscode-remote.remote-containers"
-        "ms-vscode.vscode-theme-defaults"
-        "ms-vscode.vscode-theme-seti"
-        "dracula-theme.theme-dracula"
-    )
+    # Read extensions from config file
+    local extensions_file="$SCRIPT_DIR/../../config/vscode/extensions.txt"
+    if [[ ! -f "$extensions_file" ]]; then
+        log-error "Extensions file not found: $extensions_file"
+        return 1
+    fi
+
+    local -a extensions
+    extensions=("${(@f)$(<"$extensions_file")}") # Read into array splitting by line
 
     for ext in "${extensions[@]}"; do
+        # Skip empty lines
+        [[ -z "$ext" ]] && continue
         toolbox run -c "$CONTAINER_NAME" code --install-extension "$ext" --force
     done
 
     # Configure VSCode settings
     log-info "Configuring VSCode settings..."
     toolbox run -c "$CONTAINER_NAME" mkdir -p ~/.vscode
-    toolbox run -c "$CONTAINER_NAME" bash -c 'cat > ~/.vscode/settings.json <<EOF
-{
-    "editor.fontFamily": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 1000,
-    "terminal.integrated.suggest.enabled": true,
-    "editor.suggest.showWords": false,
-    "editor.suggest.showSnippets": true,
-    "editor.suggest.showMethods": true,
-    "editor.suggest.showFunctions": true,
-    "editor.suggest.showVariables": true,
-    "editor.suggest.showModules": true,
-    "editor.suggest.showClasses": true,
-    "editor.suggest.showInterfaces": true,
-    "editor.suggest.showStructs": true,
-    "editor.suggest.showEnums": true,
-    "editor.suggest.showKeywords": true,
-    "editor.suggest.showValues": true,
-    "editor.suggest.showConstants": true,
-    "editor.suggest.showEnumsMembers": true,
-    "editor.suggest.showProperties": true,
-    "editor.suggest.showFields": true,
-    "editor.suggest.showEvents": true,
-    "editor.suggest.showOperators": true,
-    "editor.suggest.showUnits": true,
-    "editor.suggest.showColors": true,
-    "editor.suggest.showFiles": true,
-    "editor.suggest.showReferences": true,
-    "editor.suggest.showFolders": true,
-    "editor.suggest.showTypeParameters": true,
-    "editor.suggest.showIssues": true
-}
-EOF'
 
-    log-success "VSCode extensions and settings configured."
+    local settings_file="$SCRIPT_DIR/../../config/vscode/settings.json"
+    if [[ -f "$settings_file" ]]; then
+         # We need to copy the file into the container.
+         # Since toolbox shares home, we can copy to the destination directly if it's in the home dir.
+         # But the destination ~/.vscode/settings.json IS in the home dir.
+         # So we can just cp it.
+         cp -f "$settings_file" "$HOME/.vscode/settings.json"
+         log-success "VSCode settings updated from $settings_file"
+    else
+        log-warn "Settings file not found: $settings_file"
+    fi
 }
 
 set-browser-default() {
