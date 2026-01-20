@@ -41,11 +41,11 @@ main() {
         read -rp "> " choice
         
         case "$choice" in
-            1) "$SCRIPT_DIR/config/index.sh" ;;
-            2) "$SCRIPT_DIR/utils/update-system.sh" ;;
-            3) "$SCRIPT_DIR/utils/delete-folder.sh" ;;
-            4) "$SCRIPT_DIR/utils/toggle-folder-protection.sh" ;;
-            5) "$SCRIPT_DIR/utils/switch-distro.sh" ;;
+            1) confirm "Run configuration?" && "$SCRIPT_DIR/config/index.sh" ;;
+            2) confirm "Update system?" && "$SCRIPT_DIR/utils/update-system.sh" ;;
+            3) confirm "Delete folder?" && "$SCRIPT_DIR/utils/delete-folder.sh" ;;
+            4) confirm "Toggle folder protection?" && "$SCRIPT_DIR/utils/toggle-folder-protection.sh" ;;
+            5) confirm "Switch distro?" && "$SCRIPT_DIR/utils/switch-distro.sh" ;;
             6) log-info "Goodbye!"; exit 0 ;;
             *) log-warn "Invalid option: $choice" ;;
         esac
