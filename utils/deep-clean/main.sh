@@ -4,8 +4,9 @@
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/common.sh"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
+source "$SCRIPT_DIR/../../lib/common.sh"
 
 # Lists copied/adapted from config/script/manage-system.sh
 readonly -a KIONITE_CONFIG_DIRS=(

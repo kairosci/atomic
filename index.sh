@@ -13,8 +13,8 @@ show-menu() {
     distro="$(detect-distro)"
     
     printf "${BOLD}${BLUE}***************************${NC}\n"
-    printf "${BOLD}     FEDORA ATOMIC MANAGER${NC}\n"
-    printf "        Flavour: ${BLUE}%s${NC}\n" "$distro"
+    printf "${BOLD}  FEDORA ATOMIC MANAGER${NC}\n"
+    printf "     Flavour: ${BLUE}%s${NC}\n" "$distro"
     printf "${BOLD}${BLUE}***************************${NC}\n"
     printf "\n"
     printf "  [1] Optimize System\n"
@@ -32,7 +32,7 @@ main() {
              "$SCRIPT_DIR/config/script/"*.sh \
              "$SCRIPT_DIR/config/script/kionite/"*.sh \
              "$SCRIPT_DIR/config/script/silverblue/"*.sh \
-             "$SCRIPT_DIR/utils/"*.sh \
+             "$SCRIPT_DIR/utils/"*/*.sh \
              "$SCRIPT_DIR/lib/"*.sh 2>/dev/null || true
     
     while true; do
@@ -43,11 +43,11 @@ main() {
         
         case "$choice" in
             1) confirm "Run configuration?" && "$SCRIPT_DIR/config/index.sh" ;;
-            2) confirm "Update system?" && "$SCRIPT_DIR/utils/update-system.sh" ;;
-            3) confirm "Delete folder?" && "$SCRIPT_DIR/utils/delete-folder.sh" ;;
-            4) confirm "Toggle folder protection?" && "$SCRIPT_DIR/utils/toggle-folder-protection.sh" ;;
-            5) confirm "Switch distro?" && "$SCRIPT_DIR/utils/switch-distro.sh" ;;
-            6) confirm "Deep clean home (risk of data loss)?" && "$SCRIPT_DIR/utils/deep-clean.sh" ;;
+            2) confirm "Update system?" && "$SCRIPT_DIR/utils/update-system/main.sh" ;;
+            3) confirm "Delete folder?" && "$SCRIPT_DIR/utils/delete-folder/main.sh" ;;
+            4) confirm "Toggle folder protection?" && "$SCRIPT_DIR/utils/folder-protection/main.sh" ;;
+            5) confirm "Switch distro?" && "$SCRIPT_DIR/utils/switch-distro/main.sh" ;;
+            6) confirm "Deep clean home (risk of data loss)?" && "$SCRIPT_DIR/utils/deep-clean/main.sh" ;;
             7) log-info "Exiting..."; exit 0 ;;
             *) log-warn "Invalid option: $choice" ;;
         esac
