@@ -10,6 +10,7 @@ source "$SCRIPT_DIR/../../lib/common.sh"
 readonly -a COMMON_PACKAGES_TO_REMOVE=(
     "firefox" "firefox-langpacks"
     "btop"
+    "antigravity"
 )
 
 readonly -a COMMON_PACKAGES_TO_INSTALL=(
