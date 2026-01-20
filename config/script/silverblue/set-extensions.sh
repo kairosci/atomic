@@ -13,6 +13,7 @@ readonly -a GNOME_EXTENSIONS=(
     "blur-my-shell@aunetx"
     "just-perfection-desktop@just-perfection"
     "caffeine@patapon.info"
+    "user-theme@gnome-shell-extensions.gcampax.github.com"
 )
 
 install-extension-manager() {
