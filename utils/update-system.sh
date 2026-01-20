@@ -48,7 +48,7 @@ cleanup() {
 # =============================================================================
 
 main() {
-    require-root
+    ensure-root
     update-system
     update-flatpak
     cleanup
