@@ -15,7 +15,6 @@ readonly -a COMMON_PACKAGES_TO_REMOVE=(
 readonly -a COMMON_PACKAGES_TO_INSTALL=(
     "libvirt" "tlp" "tlp-rdw" "qemu-kvm"
     "papirus-icon-theme" "zsh" "util-linux-user"
-    "antigravity"
 )
 
 readonly -a KIONITE_PACKAGES_TO_REMOVE=(
@@ -60,13 +59,13 @@ readonly -a COSMIC_PACKAGES_TO_INSTALL=(
 remove-base-packages() {
     local distro="$1"
     local packages_ref="$2"
-    
+
     log-info "Removing base packages for $distro"
-    
+
     local -a valid_packages=()
     local ostree_status
     ostree_status="$(rpm-ostree status)"
-    
+
     for pkg in "${(@P)packages_ref}"; do
         if rpm -q "$pkg" &>/dev/null; then
             if echo "$ostree_status" | grep -Fq "$pkg"; then
@@ -78,7 +77,7 @@ remove-base-packages() {
             log-info "Skipping $pkg (not installed)"
         fi
     done
-    
+
     if [[ ${#valid_packages[@]} -gt 0 ]]; then
         rpm-ostree override remove "${valid_packages[@]}"
         log-success "Base packages removed"
@@ -89,7 +88,7 @@ remove-base-packages() {
 
 install-third-party-repos() {
     log-info "Installing third-party repositories"
-    
+
     if [[ ! -f /etc/yum.repos.d/brave-browser.repo ]]; then
         log-info "Adding Brave repository"
         curl -fsS https://dl.brave.com/install.sh | sh
@@ -97,27 +96,13 @@ install-third-party-repos() {
     else
         log-info "Brave repository already exists"
     fi
-
-    if [[ ! -f /etc/yum.repos.d/antigravity.repo ]]; then
-        log-info "Adding Antigravity repository"
-        cat << EOL > /etc/yum.repos.d/antigravity.repo
-[antigravity-rpm]
-name=Antigravity RPM Repository
-baseurl=https://us-central1-yum.pkg.dev/projects/antigravity-auto-updater-dev/antigravity-rpm
-enabled=1
-gpgcheck=0
-EOL
-        log-success "Antigravity repository added"
-    else
-        log-info "Antigravity repository already exists"
-    fi
 }
 
 install-packages() {
     local packages_ref="$1"
-    
+
     log-info "Installing packages"
-    
+
     if [[ ${#${(@P)packages_ref}} -gt 0 ]]; then
         rpm-ostree install --idempotent --allow-inactive "${(@P)packages_ref}"
         log-success "Packages installed"
@@ -128,9 +113,9 @@ main() {
     ensure-root
     local distro
     distro="$(detect-distro)"
-    
+
     log-info "Detected distro: $distro"
-    
+
     case "$distro" in
         kionite)
             remove-base-packages "Kionite" KIONITE_PACKAGES_TO_REMOVE
