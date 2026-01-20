@@ -25,10 +25,12 @@ get-distro-dir() {
 
 # @description Runs all configuration scripts for the detected distro.
 run-scripts() {
-    require-fedora-atomic
-
     local distro core_dir distro_dir
     distro="$(detect-distro)"
+
+    if [[ "$distro" == "unknown" ]]; then
+        log-warn "Running on unsupported distro (Toolbx or non-Fedora Atomic). Only common scripts will be executed."
+    fi
     core_dir="$(get-core-dir)"
     distro_dir="$(get-distro-dir)"
 
