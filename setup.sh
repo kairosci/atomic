@@ -14,11 +14,12 @@ source "$SCRIPT_DIR/lib/common.sh"
 set-permissions() {
     log-info "Setting executable permissions..."
     chmod +x "$SCRIPT_DIR/index.sh" \
-             "$SCRIPT_DIR/config/index.sh" \
-             "$SCRIPT_DIR/config/script/"*.sh \
-             "$SCRIPT_DIR/config/script/kionite/"*.sh \
-             "$SCRIPT_DIR/config/script/silverblue/"*.sh \
-             "$SCRIPT_DIR/utils/"*.sh \
+             "$SCRIPT_DIR/scripts/configure.sh" \
+             "$SCRIPT_DIR/scripts/core/"*.sh \
+             "$SCRIPT_DIR/scripts/distro/kionite/"*.sh \
+             "$SCRIPT_DIR/scripts/distro/silverblue/"*.sh \
+             "$SCRIPT_DIR/scripts/utils/"*.sh \
+             "$SCRIPT_DIR/scripts/utils/folder-protection/"*.sh \
              "$SCRIPT_DIR/lib/"*.sh 2>/dev/null || true
 }
 
