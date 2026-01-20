@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
-# Fedora Atomic Manager
+# @file index.sh
+# @brief Fedora Atomic Manager interactive menu
+# @description
+#   Provides an interactive menu for system management tasks
+#   on Fedora Atomic variants.
 
 set -euo pipefail
 
@@ -8,6 +12,7 @@ readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 
 source "$SCRIPT_DIR/lib/common.sh"
 
+# @description Displays the main menu.
 show-menu() {
     local distro
     distro="$(detect-distro)"
@@ -28,6 +33,7 @@ show-menu() {
     printf "\n"
 }
 
+# @description Main entry point.
 main() {
     chmod +x "$SCRIPT_DIR/scripts/configure.sh" \
              "$SCRIPT_DIR/scripts/core/"*.sh \

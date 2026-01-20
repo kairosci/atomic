@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
-
-# Unset Folder Protection
-# Removes protection from folders (removes anchor files)
-
+# @file unset.sh
+# @brief Removes folder protection
+# @description
+#   Removes immutable anchor files from all directories.
 
 set -euo pipefail
 
@@ -10,10 +10,10 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
-
 readonly ANCHOR_FILE=".state_protected"
 
-
+# @description Recursively removes protection from directories.
+# @arg $1 string Target directory path
 unprotect-directory-recursive() {
     local target_dir="$1"
 
@@ -33,6 +33,7 @@ unprotect-directory-recursive() {
     done
 }
 
+# @description Main entry point.
 main() {
     ensure-root
 

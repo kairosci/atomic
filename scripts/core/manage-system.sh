@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
-# Manage System
+# @file manage-system.sh
+# @brief System management and cleanup utilities
+# @description
+#   Performs system cleanup, upgrades, and removes distro-specific configs.
 
 set -euo pipefail
 
@@ -60,6 +63,7 @@ readonly -a COMMON_SHARE_DIRS=(
     ".local/share/waydroid" ".local/share/fonts/ubuntu"
 )
 
+# @description Cleans system journals and rpm-ostree cache.
 system-cleanup() {
     log-info "System cleanup"
     journalctl --vacuum-files=0
@@ -67,12 +71,13 @@ system-cleanup() {
     log-success "System cleaned"
 }
 
+# @description Removes distro-specific user configurations.
+# @arg $1 string Distro name (kionite, silverblue, cosmic)
 remove-user-configs() {
     local distro="$1"
+    local user_home
 
     log-info "Removing user configs for $distro"
-
-    local user_home
     user_home="$(get-user-home)"
 
     for dir in "${COMMON_CONFIG_DIRS[@]}" "${COMMON_SHARE_DIRS[@]}"; do
@@ -100,6 +105,7 @@ remove-user-configs() {
     log-success "User configs removed"
 }
 
+# @description Upgrades the system via rpm-ostree.
 system-upgrade() {
     log-info "Upgrading system"
     rpm-ostree reload
@@ -108,6 +114,7 @@ system-upgrade() {
     log-success "System upgraded"
 }
 
+# @description Performs Flatpak maintenance: uninstall unused and update.
 flatpak-maintenance() {
     log-info "Flatpak maintenance"
     flatpak uninstall --unused --delete-data -y || log-warn "Failed to uninstall unused flatpaks"
@@ -115,6 +122,7 @@ flatpak-maintenance() {
     log-success "Flatpak maintenance done"
 }
 
+# @description Main entry point.
 main() {
     ensure-root
     local distro

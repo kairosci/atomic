@@ -1,7 +1,11 @@
 #!/usr/bin/env zsh
-# Clean Orphan Directories
+# @file clean-orphans.sh
+# @brief Cleans orphaned configuration directories
+# @description
+#   Scans user config directories and removes configurations for
+#   applications that are no longer installed.
 
-set -e
+set -euo pipefail
 
 readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
@@ -17,6 +21,10 @@ readonly -a SAFE_DIRS=(
     "kwalletd" "fish" "zsh" "bash"
 )
 
+# @description Checks if a directory is in the safe list.
+# @arg $1 string Directory name
+# @exitcode 0 Directory is safe
+# @exitcode 1 Directory is not safe
 is-safe-dir() {
     local dir_name="$1"
     for safe in "${SAFE_DIRS[@]}"; do
@@ -25,6 +33,10 @@ is-safe-dir() {
     return 1
 }
 
+# @description Checks if a package exists via Flatpak, RPM, or as a command.
+# @arg $1 string Package/command name
+# @exitcode 0 Package exists
+# @exitcode 1 Package not found
 check-package-exists() {
     local name="$1"
     local lower_name="${name,,}"
@@ -37,6 +49,9 @@ check-package-exists() {
     return 1
 }
 
+# @description Scans a directory for orphaned configurations.
+# @arg $1 string Target directory path
+# @arg $2 string Description for logging
 scan-directory() {
     local target_dir="$1"
     local desc="$2"
@@ -72,36 +87,43 @@ scan-directory() {
     done
 }
 
+# @description Scans Flatpak app data for orphaned entries.
+scan-flatpak-data() {
+    log-info "Scanning Flatpak data (~/.var/app)..."
+
+    [[ -d "$HOME/.var/app" ]] || return
+
+    for app_dir in "$HOME/.var/app"/*; do
+        [[ -d "$app_dir" ]] || continue
+
+        local app_id
+        app_id="$(basename "$app_dir")"
+
+        if ! flatpak list --app --columns=application | grep -q "^$app_id$"; then
+            echo -e "\e[33m[ORPHAN FLATPAK]\e[0m $app_id"
+            printf "    Delete data for uninstalled Flatpak '%s'? [y/N] " "$app_id"
+            read -k 1 -r REPLY
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                log-info "Deleting $app_id data..."
+                rm -rf "$app_dir"
+                log-success "Deleted."
+            fi
+        fi
+    done
+}
+
+# @description Main entry point.
 main() {
     ensure-user
 
-    echo "************************************************==="
+    echo "***********************************************"
     echo " CLEAN ORPHANED CONFIGURATIONS"
-    echo "************************************************==="
+    echo "***********************************************"
 
     scan-directory "$HOME/.config" "User Config"
     scan-directory "$HOME/.local/share" "Local Data"
-
-    log-info "Scanning Flatpak data (~/.var/app)..."
-    if [[ -d "$HOME/.var/app" ]]; then
-        for app_dir in "$HOME/.var/app"/*; do
-            [[ -d "$app_dir" ]] || continue
-            local app_id
-            app_id="$(basename "$app_dir")"
-
-            if ! flatpak list --app --columns=application | grep -q "^$app_id$"; then
-                echo -e "\e[33m[ORPHAN FLATPAK]\e[0m $app_id"
-                printf "    Delete data for uninstalled Flatpak '%s'? [y/N] " "$app_id"
-                read -k 1 -r REPLY
-                echo
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    log-info "Deleting $app_id data..."
-                    rm -rf "$app_dir"
-                    log-success "Deleted."
-                fi
-            fi
-        done
-    fi
+    scan-flatpak-data
 
     log-success "Cleanup scan completed."
 }

@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
-
-# Set Safe Delete
-# Configures rm alias to use gio trash for safe deletion
-
+# @file set-safe-delete.sh
+# @brief Configures safe delete using gio trash
+# @description
+#   Sets up rm alias to use gio trash for safe deletion.
 
 set -euo pipefail
 
@@ -10,14 +10,13 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
+# @description Sets up safe delete alias in .zshrc.
 setup-alias() {
     log-info "Configuring safe delete"
 
-    local user_home
+    local user_home zshrc real_user
     user_home="$(get-user-home)"
-
-    local zshrc="$user_home/.zshrc"
-    local real_user
+    zshrc="$user_home/.zshrc"
     real_user="$(get-real-user)"
 
     if [[ ! -f "$zshrc" ]]; then
@@ -49,6 +48,7 @@ setup-alias() {
     log-success "Safe delete configured. Restart terminal or run 'source ~/.zshrc'"
 }
 
+# @description Main entry point.
 main() {
     ensure-root
     setup-alias

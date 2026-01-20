@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
-# Switch Distro
-# Switches between Fedora Silverblue and Kionite (and vice versa)
+# @file switch-distro.sh
+# @brief Switches between Fedora Atomic variants
+# @description
+#   Rebases between Silverblue, Kinoite, and Cosmic,
+#   optionally resetting the home directory.
 
 set -euo pipefail
 
@@ -8,17 +11,18 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
+# @description Gets the current Fedora version.
+# @stdout Fedora version number
 get-os-version() {
     rpm -E %fedora
 }
 
+# @description Switches to a different Fedora Atomic variant.
 switch-distro() {
     ensure-root
 
-    local current_distro
+    local current_distro os_version
     current_distro="$(detect-distro)"
-
-    local os_version
     os_version="$(get-os-version)"
 
     log-info "Current configuration:"
@@ -34,8 +38,7 @@ switch-distro() {
 
     read -rp "> " choice
 
-    local target_distro=""
-    local target_ref=""
+    local target_distro="" target_ref=""
 
     case "$choice" in
         1)
@@ -80,8 +83,8 @@ switch-distro() {
     if confirm "Do you want to RESET your home directory (delete old configs)?"; then
         log-info "Performing home directory reset..."
 
-        local user_script="$SCRIPT_DIR/reset-home.sh"
-        local real_user
+        local user_script real_user
+        user_script="$SCRIPT_DIR/reset-home.sh"
         real_user="$(get-real-user)"
 
         if [[ -f "$user_script" ]]; then
@@ -98,6 +101,7 @@ switch-distro() {
     log-info "Please reboot your system to boot into $target_distro."
 }
 
+# @description Main entry point.
 main() {
     switch-distro
 }

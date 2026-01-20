@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
-# Fedora Atomic Configuration Index
+# @file configure.sh
+# @brief Fedora Atomic Configuration Index
+# @description
+#   Runs configuration scripts based on the detected distribution
+#   and tracks execution status.
 
 set -euo pipefail
 
@@ -7,26 +11,26 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../lib/common.sh"
 
-#######################################
-# Runs configuration scripts based on the detected distribution.
-# Tracks the execution status of each script and prints a summary.
-# Globals:
-#   SCRIPT_DIR
-#   GREEN
-#   RED
-#   NC
-# Arguments:
-#   None
-#######################################
+# @description Gets the core scripts directory.
+# @stdout Core directory path
+get-core-dir() {
+    echo "$SCRIPT_DIR/core"
+}
+
+# @description Gets the distro scripts directory.
+# @stdout Distro directory path
+get-distro-dir() {
+    echo "$SCRIPT_DIR/distro"
+}
+
+# @description Runs all configuration scripts for the detected distro.
 run-scripts() {
-    local distro
+    local distro core_dir distro_dir
     distro="$(detect-distro)"
-
-    log-title "Configuration for $distro"
-
-    local core_dir distro_dir
     core_dir="$(get-core-dir)"
     distro_dir="$(get-distro-dir)"
+
+    log-title "Configuration for $distro"
 
     [[ -d "$core_dir" ]] || { log-error "Core script directory not found: $core_dir"; exit 1; }
 
@@ -64,7 +68,6 @@ run-scripts() {
             )
             ;;
         cosmic)
-            # Cosmic uses standard scripts for now, but we can add specific ones here later
             distro_scripts=(
                 "$distro_dir/cosmic/set-appearance.sh"
             )
@@ -115,11 +118,7 @@ run-scripts() {
     fi
 }
 
-#######################################
-# Main entry point for the configuration script.
-# Arguments:
-#   None
-#######################################
+# @description Main entry point.
 main() {
     run-scripts
 }

@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
-# Optimize Animations (Kionite)
+# @file optimize-animations.sh
+# @brief Optimizes KWin animations for Kionite
+# @description
+#   Configures animation duration and compositing latency.
 
 set -euo pipefail
 
@@ -7,14 +10,14 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
+# @description Optimizes KWin animations for snappy feel.
 optimize-animations() {
     log-info "Optimizing KWin Animations..."
 
     local speed="0.5"
+    local config_tool="kwriteconfig5"
 
     log-info "Setting Animation Duration Factor to $speed"
-
-    local config_tool="kwriteconfig5"
     command -v kwriteconfig6 &>/dev/null && config_tool="kwriteconfig6"
 
     "$config_tool" --file kdeglobals --group KDE --key AnimationDurationFactor "$speed"
@@ -32,6 +35,7 @@ optimize-animations() {
     fi
 }
 
+# @description Main entry point.
 main() {
     ensure-user
     optimize-animations

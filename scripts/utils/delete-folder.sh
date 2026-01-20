@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
-
-# Delete Folder
-# Interactively deletes folders matching a pattern
-
+# @file delete-folder.sh
+# @brief Interactively deletes folders matching a pattern
+# @description
+#   Prompts for a folder name pattern and deletes all matching folders.
 
 set -euo pipefail
 
@@ -10,7 +10,7 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
-
+# @description Deletes folders matching a user-provided pattern.
 delete-folders() {
     read -rp "Folder name pattern: " folder_name
 
@@ -33,7 +33,7 @@ delete-folders() {
     log-success "Done"
 }
 
-
+# @description Main entry point.
 main() {
     delete-folders
 }

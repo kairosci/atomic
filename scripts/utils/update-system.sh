@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
-
-# Update System
-# Performs system update, Flatpak update, and cleanup
-
+# @file update-system.sh
+# @brief Performs full system update and cleanup
+# @description
+#   Updates rpm-ostree, Flatpak, and cleans up old files.
 
 set -euo pipefail
 
@@ -10,9 +10,7 @@ readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
-
-
-
+# @description Updates system via rpm-ostree.
 update-system() {
     log-info "Updating system (rpm-ostree)"
     rpm-ostree reload
@@ -21,12 +19,14 @@ update-system() {
     log-success "System updated"
 }
 
+# @description Updates all Flatpak apps.
 update-flatpak() {
     log-info "Updating Flatpaks"
     flatpak update -y
     log-success "Flatpaks updated"
 }
 
+# @description Cleans up rpm-ostree base and unused Flatpaks.
 cleanup() {
     log-info "Cleaning up system"
 
@@ -43,6 +43,7 @@ cleanup() {
     log-success "Cleanup completed"
 }
 
+# @description Main entry point.
 main() {
     ensure-root
     update-system
