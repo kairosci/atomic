@@ -61,32 +61,10 @@ ensure-user() {
     fi
 }
 
-# @description Logs an info message.
-# @arg $* string Message to log
-log-info() {
-    printf "${BLUE}[INFO]${NC} %s\n" "$*"
-}
-
-# @description Logs a warning message.
-# @arg $* string Message to log
-log-warn() {
-    printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2
-}
-
-# @description Logs an error message.
-# @arg $* string Message to log
-log-error() {
-    printf "${RED}[ERROR]${NC} %s\n" "$*" >&2
-}
-
-# @description Logs a success message.
-# @arg $* string Message to log
-log-success() {
-    printf "${GREEN}[OK]${NC} %s\n" "$*"
-}
-
-# @description Logs a title/section header.
-# @arg $* string Title text
+log-info() { printf "${BLUE}[INFO]${NC} %s\n" "$*"; }
+log-warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2; }
+log-error() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; }
+log-success() { printf "${GREEN}[OK]${NC} %s\n" "$*"; }
 log-title() {
     printf "\n${BOLD}${BLUE}**** %s ****${NC}\n" "$*"
 }
@@ -135,4 +113,78 @@ confirm() {
         return 1
     fi
     return 0
+}
+
+# @description Global arrays for execution tracking
+typeset -gA EXECUTION_RESULTS
+typeset -ga EXECUTION_ORDER
+
+# @description Clears execution tracking state.
+clear-execution-tracking() {
+    EXECUTION_RESULTS=()
+    EXECUTION_ORDER=()
+}
+
+# @description Runs a script and tracks its execution status.
+# @arg $1 string Script path
+# @arg $2 string Optional display name
+run-with-status() {
+    local script="$1"
+    local name="${2:-$(basename "$script")}"
+
+    if [[ ! -f "$script" ]]; then
+        EXECUTION_RESULTS["$name"]="NOT_FOUND"
+        EXECUTION_ORDER+=("$name")
+        log-warn "Script not found: $script"
+        return 1
+    fi
+
+    log-info "Executing: $name"
+
+    if "$script"; then
+        EXECUTION_RESULTS["$name"]="SUCCESS"
+    else
+        EXECUTION_RESULTS["$name"]="FAILED"
+    fi
+
+    EXECUTION_ORDER+=("$name")
+}
+
+# @description Shows execution summary for all tracked scripts.
+show-execution-summary() {
+    if [[ ${#EXECUTION_ORDER[@]} -eq 0 ]]; then
+        return 0
+    fi
+
+    echo ""
+    log-title "Execution Summary"
+
+    local success_count=0
+    local fail_count=0
+
+    for name in "${EXECUTION_ORDER[@]}"; do
+        local status="${EXECUTION_RESULTS[$name]}"
+        case "$status" in
+            SUCCESS)
+                printf "${GREEN}[PASS]${NC} %s\n" "$name"
+                ((success_count++))
+                ;;
+            FAILED)
+                printf "${RED}[FAIL]${NC} %s (exit code != 0)\n" "$name"
+                ((fail_count++))
+                ;;
+            NOT_FOUND)
+                printf "${YELLOW}[SKIP]${NC} %s (not found)\n" "$name"
+                ;;
+        esac
+    done
+
+    echo ""
+    if [[ $fail_count -eq 0 ]]; then
+        log-success "All $success_count script(s) completed successfully."
+    else
+        log-warn "$success_count passed, $fail_count failed."
+    fi
+
+    clear-execution-tracking
 }
