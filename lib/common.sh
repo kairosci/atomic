@@ -69,10 +69,22 @@ ensure-user() {
     fi
 }
 
-log-info() { printf "${BLUE}[INFO]${NC} %s\n" "$*"; }
-log-warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2; }
-log-error() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; }
-log-success() { printf "${GREEN}[OK]${NC} %s\n" "$*"; }
+log-info() {
+  printf "${BLUE}[INFO]${NC} %s\n" "$*";
+}
+
+log-warn() {
+  printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2;
+}
+
+log-error() {
+  printf "${RED}[ERROR]${NC} %s\n" "$*" >&2;
+}
+
+log-success() {
+  printf "${GREEN}[OK]${NC} %s\n" "$*";
+}
+
 log-title() {
     printf "\n${BOLD}${BLUE}**** %s ****${NC}\n" "$*"
 }
@@ -171,8 +183,8 @@ show-execution-summary() {
     local fail_count=0
 
     for name in "${EXECUTION_ORDER[@]}"; do
-        local status="${EXECUTION_RESULTS[$name]:-UNKNOWN}"
-        case "$status" in
+        local result="${EXECUTION_RESULTS[$name]:-UNKNOWN}"
+        case "$result" in
             SUCCESS)
                 printf "${GREEN}[PASS]${NC} %s\n" "$name"
                 ((success_count++))
