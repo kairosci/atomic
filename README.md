@@ -9,7 +9,7 @@ Configuration scripts for **Fedora Kionite** (KDE) and **Fedora Silverblue** (GN
 | Distro Auto Detection                 | ✓       | ✓          |
 | Remove Bloatware                      | ✓       | ✓          |
 | Brave Browser                         | ✓       | ✓          |
-| Flatpak Apps (Discord)                | ✓       | ✓          |
+| Flatpak Apps (Discord, Antigravity)   | ✓       | ✓          |
 | TLP Power Management                  | ✓       | ✓          |
 | Distrobox + libvirt/QEMU              | ✓       | ✓          |
 | Papirus Icons + Flatpak Override      | ✓       | ✓          |
