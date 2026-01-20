@@ -37,7 +37,7 @@ install-inter-font() {
     temp_zip="$(mktemp).zip"
 
     log-info "Downloading Inter font..."
-    curl -LDo "$temp_zip" "$INTER_FONT_URL"
+    curl -Lo "$temp_zip" "$INTER_FONT_URL"
 
     log-info "Extracting Inter font..."
     unzip -o "$temp_zip" -d "$FONT_DIR/Inter" >/dev/null
@@ -71,19 +71,25 @@ install-orchis() {
     mkdir -p "$THEME_DIR"
     git clone --depth 1 "$ORCHIS_REPO" "$work_dir/orchis"
 
+    # Apply border-radius patch (0px = sharp corners)
+    source "$SCRIPT_DIR/patch-orchis.sh"
+    patch-border-radius "$work_dir/orchis"
+
     pushd "$work_dir/orchis" > /dev/null
 
     # Install Dark variants with premium tweaks
-    # -c dark: Dark version
-    # -t black: Deep black background
-    # -t solid: Solid panels (no transparency issues)
-    # -t primary: Primary color tweaks
-    # --tweaks compact: Compact version for better density
-    ./install.sh -c dark -t black solid primary --tweaks compact --shell --libadwaita
+    # -c dark: Dark color scheme
+    # -s compact: Compact size variant
+    # --tweaks: solid (no transparency), black (full black), primary (themed radio buttons)
+    ./install.sh -c dark -s compact --tweaks solid black primary
 
     popd > /dev/null
 
     rm -rf "$work_dir"
+
+    # Apply window decoration override CSS
+    apply-window-override
+
     log-success "Orchis theme installed (Premium Dark)"
 }
 
