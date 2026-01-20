@@ -17,6 +17,10 @@ readonly -a SILVERBLUE_APPS_TO_REMOVE=(
     "org.gnome.Characters" "org.gnome.SystemMonitor"
 )
 
+readonly -a COSMIC_APPS_TO_REMOVE=(
+    "org.mozilla.firefox"
+)
+
 readonly -a COMMON_APPS_TO_REMOVE=(
     "org.fedoraproject.Platform.GL.default"
 )
@@ -50,6 +54,15 @@ remove-defaults() {
             ;;
         silverblue)
             for app in "${SILVERBLUE_APPS_TO_REMOVE[@]}"; do
+                if echo "$installed_apps" | grep -q "$app"; then
+                    valid_apps+=("$app")
+                else
+                    log-info "Skipping $app (not installed)"
+                fi
+            done
+            ;;
+        cosmic)
+            for app in "${COSMIC_APPS_TO_REMOVE[@]}"; do
                 if echo "$installed_apps" | grep -q "$app"; then
                     valid_apps+=("$app")
                 else

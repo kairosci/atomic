@@ -22,6 +22,8 @@ detect-distro() {
         echo "kionite"
     elif grep -qi "Silverblue" /etc/os-release 2>/dev/null; then
         echo "silverblue"
+    elif grep -qi "Cosmic" /etc/os-release 2>/dev/null; then
+        echo "cosmic"
     else
         echo "unknown"
     fi
