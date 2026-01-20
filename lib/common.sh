@@ -1,18 +1,15 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Fedora Atomic Common Library
 
 set -euo pipefail
 
 readonly SCRIPT_NAME="${0##*/}"
 
-# Colors and Formatting
 readonly BOLD='\033[1m'
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[0;33m'
 readonly BLUE='\033[0;34m'
-
-# No Color
 readonly NC='\033[0m'
 
 detect-distro() {
@@ -39,8 +36,9 @@ get-user-home() {
 
 ensure-root() {
     if [[ "$EUID" -ne 0 ]]; then
-        echo -e "${YELLOW}Privilege escalation required for $SCRIPT_NAME...${NC}" >&2
-        exec sudo "$0" "$@"
+        printf "${YELLOW}Privilege escalation required for %s...${NC}\n" "$SCRIPT_NAME" >&2
+        local target_script="${SCRIPT_FILE:-${0:A}}"
+        exec sudo "$target_script" "$@"
     fi
 }
 
@@ -50,12 +48,12 @@ ensure-user() {
     fi
 }
 
-log-info() { echo -e "${BLUE}[INFO]${NC} $*"; }
-log-warn() { echo -e "${YELLOW}[WARN]${NC} $*" >&2; }
-log-error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
-log-success() { echo -e "${GREEN}[OK]${NC} $*"; }
+log-info() { printf "${BLUE}[INFO]${NC} %s\n" "$*"; }
+log-warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$*" >&2; }
+log-error() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; }
+log-success() { printf "${GREEN}[OK]${NC} %s\n" "$*"; }
 log-title() { 
-    echo -e "\n${BOLD}${BLUE}==== $* ====${NC}"
+    printf "\n${BOLD}${BLUE}**** %s ****${NC}\n" "$*"
 }
 
 fix-ownership() {
@@ -80,9 +78,9 @@ require-command() {
 
 confirm() {
     local prompt="${1:-Are you sure?}"
-    echo -ne "${YELLOW}$prompt [y/N] ${NC}"
+    printf "${YELLOW}%s [y/N] ${NC}" "$prompt"
     read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+    if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         log-info "Operation cancelled."
         return 1
     fi

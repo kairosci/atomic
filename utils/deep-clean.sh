@@ -1,12 +1,13 @@
 #!/usr/bin/env zsh
-# Manage System
+# Deep Clean User Home
+# Removes configuration, cache, and data files to reset the environment
 
 set -euo pipefail
 
-readonly SCRIPT_FILE="${0:A}"
-readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
-source "$SCRIPT_DIR/../../lib/common.sh"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
+# Lists copied/adapted from config/script/manage-system.sh
 readonly -a KIONITE_CONFIG_DIRS=(
     ".config/kdeconnect" ".config/kdeconnectrc" ".config/plasma-welcomerc"
     ".config/filelightrc" ".config/kdebugrc" ".config/khelpcenterrc"
@@ -38,17 +39,6 @@ readonly -a SILVERBLUE_SHARE_DIRS=(
     ".local/share/cheese" ".local/share/rhythmbox" ".local/share/yelp"
 )
 
-readonly -a COSMIC_CONFIG_DIRS=(
-    ".config/cosmic" ".config/cosmic-app-library" ".config/cosmic-comp"
-    ".config/cosmic-greeter" ".config/cosmic-launcher" ".config/cosmic-osd"
-    ".config/cosmic-panel" ".config/cosmic-session" ".config/cosmic-settings"
-    ".config/cosmic-shortcut" ".config/cosmic-term" ".config/cosmic-workspaces"
-)
-
-readonly -a COSMIC_SHARE_DIRS=(
-    ".local/share/cosmic"
-)
-
 readonly -a COMMON_CONFIG_DIRS=(
     ".mozilla" ".config/ibus/typing-booster" ".config/toolboxrc"
 )
@@ -60,72 +50,67 @@ readonly -a COMMON_SHARE_DIRS=(
     ".local/share/waydroid" ".local/share/fonts/ubuntu"
 )
 
-system-cleanup() {
-    log-info "System cleanup"
-    journalctl --vacuum-files=0
-    rpm-ostree cleanup --base --rollback -m
-    log-success "System cleaned"
-}
+# Additional cleanup for deep clean
+readonly -a DEEP_CLEAN_DIRS=(
+    ".cache/mozilla"
+    ".cache/thumbnails"
+    ".cache/pip"
+    ".cache/yarn"
+    ".cache/npm"
+    ".local/state/wireplumber"
+)
 
-remove-user-configs() {
-    local distro="$1"
-    
-    log-info "Removing user configs for $distro"
-    
+perform-cleanup() {
+    local distro
+    distro="$(detect-distro)"
     local user_home
     user_home="$(get-user-home)"
-    
-    for dir in "${COMMON_CONFIG_DIRS[@]}" "${COMMON_SHARE_DIRS[@]}"; do
-        rm -rf "$user_home/$dir"
-    done
+
+    log-title "Deep Cleaning $user_home ($distro)"
+
+    local -a targets=()
+    targets+=("${COMMON_CONFIG_DIRS[@]}" "${COMMON_SHARE_DIRS[@]}" "${DEEP_CLEAN_DIRS[@]}")
     
     case "$distro" in
         kionite)
-            for dir in "${KIONITE_CONFIG_DIRS[@]}" "${KIONITE_SHARE_DIRS[@]}"; do
-                rm -rf "$user_home/$dir"
-            done
+            targets+=("${KIONITE_CONFIG_DIRS[@]}" "${KIONITE_SHARE_DIRS[@]}")
             ;;
         silverblue)
-            for dir in "${SILVERBLUE_CONFIG_DIRS[@]}" "${SILVERBLUE_SHARE_DIRS[@]}"; do
-                rm -rf "$user_home/$dir"
-            done
-            ;;
-        cosmic)
-            for dir in "${COSMIC_CONFIG_DIRS[@]}" "${COSMIC_SHARE_DIRS[@]}"; do
-                rm -rf "$user_home/$dir"
-            done
+            targets+=("${SILVERBLUE_CONFIG_DIRS[@]}" "${SILVERBLUE_SHARE_DIRS[@]}")
             ;;
     esac
-    
-    log-success "User configs removed"
-}
 
-system-upgrade() {
-    log-info "Upgrading system"
-    rpm-ostree reload
-    rpm-ostree refresh-md
-    rpm-ostree upgrade
-    log-success "System upgraded"
-}
+    # Add whole .cache if desired, but for now we look for specific targets inside it or just specific apps.
+    # Actually, specific clean is safer, but "nice cleanup" implies catching junk. 
+    # Let's offer to wipe ~/.cache entirely as a separate step.
 
-flatpak-maintenance() {
-    log-info "Flatpak maintenance"
-    flatpak uninstall --unused --delete-data -y || log-warn "Failed to uninstall unused flatpaks"
-    flatpak update -y
-    log-success "Flatpak maintenance done"
+    log-warn "The following items will be DELETED forever:"
+    for item in "${targets[@]}"; do
+        if [[ -e "$user_home/$item" ]]; then
+            echo "  - $user_home/$item"
+        fi
+    done
+
+    if confirm "Proceed with deletion?"; then
+        for item in "${targets[@]}"; do
+            if [[ -e "$user_home/$item" ]]; then
+                rm -rf "$user_home/$item"
+                echo "Deleted: $item"
+            fi
+        done
+        log-success "Targeted files removed."
+    fi
+
+    echo ""
+    if confirm "Do you also want to clear the ENTIRE ~/.cache folder? (Recommended for deep issues)"; then
+         rm -rf "$user_home/.cache"/*
+         log-success "Cache cleared."
+    fi
 }
 
 main() {
-    ensure-root
-    local distro
-    distro="$(detect-distro)"
-    
-    log-info "Detected distro: $distro"
-    
-    system-cleanup
-    remove-user-configs "$distro"
-    system-upgrade
-    flatpak-maintenance
+    ensure-user
+    perform-cleanup
 }
 
 main "$@"

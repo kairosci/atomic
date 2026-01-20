@@ -1,17 +1,18 @@
-#!/usr/bin/bash
-# =============================================================================
+#!/usr/bin/env zsh
+# *****************************************************************************
 # Update System
 # Performs system update, Flatpak update, and cleanup
-# =============================================================================
+# *****************************************************************************
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../lib/common.sh"
 
-# =============================================================================
+# *****************************************************************************
 # Functions
-# =============================================================================
+# *****************************************************************************
 
 update-system() {
     log-info "Updating system (rpm-ostree)"
@@ -34,7 +35,7 @@ cleanup() {
     rpm-ostree cleanup --base -m
     
     log-info "Removing unused Flatpak runtimes"
-    flatpak uninstall --unused --delete-data -y || true
+    flatpak uninstall --unused --delete-data -y || log-warn "Failed to uninstall unused flatpaks"
     
     log-info "Vacuuming system logs"
     journalctl --vacuum-files=0
@@ -43,9 +44,9 @@ cleanup() {
     log-success "Cleanup completed"
 }
 
-# =============================================================================
+# *****************************************************************************
 # Entry Point
-# =============================================================================
+# *****************************************************************************
 
 main() {
     ensure-root

@@ -1,9 +1,10 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Set RPM Packages
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../lib/common.sh"
 
 readonly -a COMMON_PACKAGES_TO_REMOVE=(
@@ -44,7 +45,7 @@ readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
 
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
     "${COMMON_PACKAGES_TO_INSTALL[@]}"
-    "arc-theme"
+    "sassc" "gtk-murrine-engine"
 )
 
 readonly -a COSMIC_PACKAGES_TO_REMOVE=(

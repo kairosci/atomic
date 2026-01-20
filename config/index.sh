@@ -1,9 +1,10 @@
-#!/usr/bin/bash
+#!/usr/bin/env zsh
 # Fedora Atomic Configuration Index
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_FILE="${0:A}"
+readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../lib/common.sh"
 
 run-scripts() {
@@ -44,7 +45,7 @@ run-scripts() {
             ;;
         silverblue)
             distro_scripts=(
-                "./silverblue/set-papirus.sh"
+                "$SCRIPT_DIR/script/silverblue/set-theme.sh"
                 "./silverblue/set-extensions.sh"
                 "./silverblue/optimize-animations.sh"
             )
