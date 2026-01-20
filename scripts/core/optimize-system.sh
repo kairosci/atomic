@@ -25,6 +25,7 @@ readonly -a SERVICES_TO_MASK=(
 
 # @description Disables and masks unnecessary services.
 disable-services() {
+    command-exists systemctl || { log-warn "systemctl not available, skipping service optimization"; return 0; }
     log-info "Disabling unnecessary services..."
 
     local service_name
