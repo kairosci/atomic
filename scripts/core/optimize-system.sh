@@ -46,11 +46,12 @@ disable-services() {
 
 # @description Applies kernel optimizations via sysctl.
 configure-sysctl() {
+    command-exists sysctl || { log-warn "sysctl not available, skipping kernel optimizations"; return 0; }
     log-info "Applying kernel optimizations..."
 
     local sysctl_config_file="/etc/sysctl.d/99-performance.conf"
 
-    cat > "$sysctl_config_file" <<'EOF'
+    if ! cat > "$sysctl_config_file" <<'EOF' 2>/dev/null
 vm.swappiness=100
 vm.vfs_cache_pressure=50
 vm.dirty_ratio=15
@@ -62,8 +63,12 @@ net.ipv4.tcp_congestion_control=bbr
 net.core.default_qdisc=cake
 fs.file-max=2097152
 EOF
+    then
+        log-warn "Cannot write sysctl config, skipping"
+        return 0
+    fi
 
-    sysctl --system &>/dev/null
+    sysctl --system &>/dev/null || log-warn "sysctl --system failed"
     log-success "Kernel parameters applied"
 }
 
@@ -75,9 +80,7 @@ configure-cpu-governor() {
         cpupower frequency-set -g performance &>/dev/null || log-warn "cpupower failed"
     else
         for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-            if [[ -f "$cpu" ]]; then
-                echo "performance" > "$cpu" 2>/dev/null || true
-            fi
+            [[ -w "$cpu" ]] && echo "performance" > "$cpu"
         done
     fi
 
@@ -89,21 +92,24 @@ configure-io-scheduler() {
     log-info "Optimizing I/O scheduler..."
 
     for dev in /sys/block/sd*(N) /sys/block/nvme*n*(N); do
-        if [[ -f "$dev/queue/scheduler" ]]; then
-            if grep -q "bfq" "$dev/queue/scheduler"; then
-                echo "bfq" > "$dev/queue/scheduler" 2>/dev/null || true
-            elif grep -q "mq-deadline" "$dev/queue/scheduler"; then
-                echo "mq-deadline" > "$dev/queue/scheduler" 2>/dev/null || true
+        local sched_file="$dev/queue/scheduler"
+        if [[ -w "$sched_file" ]]; then
+            if grep -q "bfq" "$sched_file"; then
+                echo "bfq" > "$sched_file"
+            elif grep -q "mq-deadline" "$sched_file"; then
+                echo "mq-deadline" > "$sched_file"
             fi
         fi
     done
 
-    cat > "/etc/udev/rules.d/60-io-scheduler.rules" <<'EOF'
+    if cat > "/etc/udev/rules.d/60-io-scheduler.rules" <<'EOF' 2>/dev/null
 ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="bfq"
 ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/scheduler}="bfq"
 EOF
+    then
+        udevadm control --reload 2>/dev/null || true
+    fi
 
-    udevadm control --reload 2>/dev/null || true
     log-success "I/O scheduler optimized"
 }
 
