@@ -38,7 +38,8 @@ main() {
     while true; do
         clear
         show-menu
-        read -rp "> " choice
+        printf "> "
+        read -r choice
         
         case "$choice" in
             1) confirm "Run configuration?" && "$SCRIPT_DIR/config/index.sh" ;;
@@ -52,7 +53,8 @@ main() {
         esac
         
         printf "\n"
-        read -rp "Press Enter to continue..."
+        printf "Press Enter to continue..."
+        read -k 1 -r
     done
 }
 

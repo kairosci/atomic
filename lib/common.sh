@@ -58,7 +58,7 @@ log-title() {
 
 fix-ownership() {
     local path="$1"
-    [[ -n "${SUDO_USER:-}" ]] && chown "$(get-real-user):$(get-real-user)" "$path"
+    [[ -n "${SUDO_USER:-}" ]] && /usr/bin/chown "$(get-real-user):$(get-real-user)" "$path"
 }
 
 fix-ownership-recursive() {
@@ -80,7 +80,7 @@ confirm() {
     local prompt="${1:-Are you sure?}"
     printf "${YELLOW}%s [y/N] ${NC}" "$prompt"
     read -r response
-    if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    if [[ ! "$response" =~ ^[yY]$ ]]; then
         log-info "Operation cancelled."
         return 1
     fi
