@@ -22,7 +22,7 @@ readonly -a KIONITE_PACKAGES_TO_INSTALL=(
     "kalk" "ksshaskpass" "libvirt" "tlp" "tlp-rdw"
     "qemu-kvm" "distrobox" "rsms-inter-fonts"
     "google-noto-emoji-fonts" "breeze-gtk" "adw-gtk3-theme"
-    "papirus-icon-theme"
+    "papirus-icon-theme" "btop"
 )
 
 readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
@@ -37,8 +37,7 @@ readonly -a SILVERBLUE_PACKAGES_TO_REMOVE=(
 readonly -a SILVERBLUE_PACKAGES_TO_INSTALL=(
     "libvirt" "tlp" "tlp-rdw" "qemu-kvm" "distrobox"
     "rsms-inter-fonts" "google-noto-emoji-fonts"
-    "rsms-inter-fonts" "google-noto-emoji-fonts"
-    "papirus-icon-theme"
+    "papirus-icon-theme" "btop"
 )
 
 remove-base-packages() {

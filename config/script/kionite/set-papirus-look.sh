@@ -67,12 +67,21 @@ configure-animations() {
     reload-kwin
 }
 
+override-flatpak-icons() {
+    log-info "Overriding Flatpak icons..."
+    flatpak override --user --filesystem=~/.icons:ro
+    flatpak override --user --filesystem=~/.local/share/icons:ro
+    flatpak override --user --filesystem=/usr/share/icons:ro
+    log-success "Flatpak icons overridden"
+}
+
 main() {
     ensure-user
     
     configure-theme
     configure-kwin
     configure-animations
+    override-flatpak-icons
     
     log-success "Papirus look applied"
 }

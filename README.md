@@ -12,15 +12,15 @@ Configuration scripts for **Fedora Kionite** (KDE) and **Fedora Silverblue** (GN
 | Flatpak Apps (Discord)                | ✓       | ✓          |
 | TLP Power Management                  | ✓       | ✓          |
 | Distrobox + libvirt/QEMU              | ✓       | ✓          |
-| Papirus Icons                         | ✓       | ✓          |
+| Papirus Icons + Flatpak Override      | ✓       | ✓          |
 | OS Optimization (kernel, services)    | ✓       | ✓          |
 | GNOME Extensions                      | —       | ✓          |
 
 ## Installation
 
 ```bash
-git clone https://codeberg.org/kairosci/fedora-atomic-config.git
-cd fedora-atomic-config
+git clone https://github.com/kairosci/atomic.git
+cd atomic
 sudo ./setup.sh
 ```
 
