@@ -13,17 +13,17 @@ show-menu() {
     local distro
     distro="$(detect-distro)"
     
-    echo -e "${BOLD}${BLUE}================================${NC}"
-    echo -e "${BOLD}    Fedora Atomic Manager${NC}"
-    echo -e "       [${BLUE}$distro${NC}]"
-    echo -e "${BOLD}${BLUE}================================${NC}"
+    echo -e "${BOLD}${BLUE}--------------------------------${NC}"
+    echo -e "${BOLD}     FEDORA ATOMIC MANAGER${NC}"
+    echo -e "        Mode: ${BLUE}$distro${NC}"
+    echo -e "${BOLD}${BLUE}--------------------------------${NC}"
     echo ""
-    echo -e "  ${BLUE}1.${NC} Optimize System"
-    echo -e "  ${BLUE}2.${NC} Update System"
-    echo -e "  ${BLUE}3.${NC} Delete Folder"
-    echo -e "  ${BLUE}4.${NC} Enable/Disable Folder Protection"
-    echo -e "  ${BLUE}5.${NC} Switch Distro (Kionite/Silverblue)"
-    echo -e "  ${RED}6.${NC} Exit"
+    echo -e "  [1] Optimize System"
+    echo -e "  [2] Update System"
+    echo -e "  [3] Delete Folder"
+    echo -e "  [4] Folder Protection"
+    echo -e "  [5] Switch Distro"
+    echo -e "  [6] ${RED}Exit${NC}"
     echo ""
 }
 

@@ -51,7 +51,7 @@ readonly -a COMMON_SHARE_DIRS=(
 system-cleanup() {
     log-info "System cleanup"
     journalctl --vacuum-files=0
-    rpm-ostree cleanup --base -m
+    rpm-ostree cleanup --base --rollback -m
     log-success "System cleaned"
 }
 
