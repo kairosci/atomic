@@ -27,11 +27,17 @@ optimize-animations() {
 
     log-info "Reloading KWin..."
     if command -v qdbus6 &>/dev/null; then
-        qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
+        if ! qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null; then
+            log-warn "Failed to reload KWin via qdbus6"
+        fi
     elif command -v qdbus &>/dev/null; then
-        qdbus org.kde.KWin /KWin reconfigure 2>/dev/null || true
+        if ! qdbus org.kde.KWin /KWin reconfigure 2>/dev/null; then
+            log-warn "Failed to reload KWin via qdbus"
+        fi
     elif command -v qdbus-qt5 &>/dev/null; then
-        qdbus-qt5 org.kde.KWin /KWin reconfigure 2>/dev/null || true
+        if ! qdbus-qt5 org.kde.KWin /KWin reconfigure 2>/dev/null; then
+            log-warn "Failed to reload KWin via qdbus-qt5"
+        fi
     fi
 }
 

@@ -33,7 +33,9 @@ apply-kwrite() {
 reload-kwin() {
     for tool in qdbus6 qdbus qdbus-qt5; do
         if command -v "$tool" &>/dev/null; then
-            "$tool" org.kde.KWin /KWin reconfigure 2>/dev/null || true
+            if ! "$tool" org.kde.KWin /KWin reconfigure 2>/dev/null; then
+                log-warn "Failed to reload KWin via $tool"
+            fi
             return
         fi
     done

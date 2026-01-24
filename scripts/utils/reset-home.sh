@@ -50,7 +50,9 @@ reset-home() {
 
             if [[ "$basename" == ".local" ]]; then
                 log-info "Cleaning .local..."
-                cp -r "$item" "$backup_dir/" 2>/dev/null || true
+                if ! cp -r "$item" "$backup_dir/" 2>/dev/null; then
+                    log-warn "Failed to backup .local to $backup_dir"
+                fi
 
                 for sub in "$item"/*; do
                     local subname="${sub##*/}"
@@ -63,7 +65,9 @@ reset-home() {
             continue
         fi
 
-        cp -r "$item" "$backup_dir/" 2>/dev/null || true
+        if ! cp -r "$item" "$backup_dir/" 2>/dev/null; then
+            log-warn "Failed to backup $item to $backup_dir"
+        fi
         rm -rf "$item"
         echo "Deleted: $basename"
     done

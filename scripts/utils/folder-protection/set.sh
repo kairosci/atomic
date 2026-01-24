@@ -27,11 +27,13 @@ protect-directory-recursive() {
 
     find "$target_dir" -mount -type d | while read -r dir; do
         if [[ "$dir" == */.*  ]]; then
-            if [[ -f "$dir/$ANCHOR_FILE" ]]; then
-                log-info "Unprotecting: $dir"
-                chattr -i "$dir/$ANCHOR_FILE" 2>/dev/null || true
-                rm -f "$dir/$ANCHOR_FILE"
-            fi
+                if [[ -f "$dir/$ANCHOR_FILE" ]]; then
+                    log-info "Unprotecting: $dir"
+                    if ! chattr -i "$dir/$ANCHOR_FILE" 2>/dev/null; then
+                        log-warn "Failed to remove immutable flag from $dir/$ANCHOR_FILE"
+                    fi
+                    rm -f "$dir/$ANCHOR_FILE"
+                fi
         else
             if [[ -f "$dir/$ANCHOR_FILE" ]]; then
                 continue

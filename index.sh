@@ -89,13 +89,20 @@ run-install-ides() {
 
 # @description Main entry point.
 main() {
-    chmod +x "$SCRIPT_DIR/scripts/configure.sh" \
+    log-info "Setting execute permissions on scripts..."
+    for f in "$SCRIPT_DIR/index.sh" \
+             "$SCRIPT_DIR/scripts/configure.sh" \
              "$SCRIPT_DIR/scripts/core/"*.sh \
              "$SCRIPT_DIR/scripts/distro/kionite/"*.sh \
              "$SCRIPT_DIR/scripts/distro/silverblue/"*.sh \
              "$SCRIPT_DIR/scripts/utils/"*.sh \
              "$SCRIPT_DIR/scripts/utils/folder-protection/"*.sh \
-             "$SCRIPT_DIR/lib/"*.sh 2>/dev/null || true
+             "$SCRIPT_DIR/lib/"*.sh; do
+        [[ -e "$f" ]] || continue
+        if ! chmod +x "$f" 2>/dev/null; then
+            log-warn "Failed to set +x on $f"
+        fi
+    done
 
     while true; do
         clear

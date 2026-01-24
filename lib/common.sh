@@ -44,6 +44,10 @@ get-user-home() {
     getent passwd "$(get-real-user)" | cut -d: -f6
 }
 
+get-real-user-id() {
+    echo "$(id -u "$(get-real-user)")"
+}
+
 get-core-dir() {
     local script_dir="${SCRIPT_DIR:-${0:A:h}}"
     echo "$script_dir/core"

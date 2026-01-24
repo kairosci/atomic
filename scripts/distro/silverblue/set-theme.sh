@@ -71,7 +71,7 @@ install-orchis() {
     mkdir -p "$THEME_DIR"
     git clone --depth 1 "$ORCHIS_REPO" "$work_dir/orchis"
 
-    # Apply border-radius patch (0px = sharp corners)
+    # Apply border-radius patch (3px = subtle rounding)
     source "$SCRIPT_DIR/patch-orchis.sh"
     patch-border-radius "$work_dir/orchis"
 

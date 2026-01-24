@@ -143,7 +143,9 @@ set-os-theme-default() {
 
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
     gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'
-    sudo dnf remove -y papirus-icon-theme* || true
+    if ! sudo dnf remove -y papirus-icon-theme*; then
+        log-warn "Failed to remove papirus icon theme packages"
+    fi
 
     log-success "OS theme set to default."
 }

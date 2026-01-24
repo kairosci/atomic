@@ -42,7 +42,10 @@ remove-defaults() {
     local installed_apps
 
     log-info "Removing default Flatpak apps for $distro"
-    installed_apps="$(flatpak list --app --columns=application 2>/dev/null || true)"
+    if ! installed_apps="$(flatpak list --app --columns=application 2>/dev/null)"; then
+        log-warn "flatpak list failed; assuming no apps installed"
+        installed_apps=""
+    fi
 
     for app in "${COMMON_APPS_TO_REMOVE[@]}"; do
         echo "$installed_apps" | grep -q "$app" && valid_apps+=("$app")
@@ -98,8 +101,11 @@ install-apps() {
     log-info "Installing Flatpak apps"
 
     if [[ ${#APPS_TO_INSTALL[@]} -gt 0 ]]; then
-        flatpak install flathub "${APPS_TO_INSTALL[@]}" -y || true
-        log-success "Apps installed"
+        if ! flatpak install flathub "${APPS_TO_INSTALL[@]}" -y; then
+            log-warn "flatpak install failed for: ${APPS_TO_INSTALL[*]}"
+        else
+            log-success "Apps installed"
+        fi
     else
         log-info "No apps to install"
     fi
