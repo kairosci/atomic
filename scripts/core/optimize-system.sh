@@ -107,7 +107,9 @@ ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="bfq"
 ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/scheduler}="bfq"
 EOF
     then
-        udevadm control --reload 2>/dev/null || true
+        if ! udevadm control --reload 2>/dev/null; then
+            log-warn "udevadm control --reload failed"
+        fi
     fi
 
     log-success "I/O scheduler optimized"
@@ -124,8 +126,12 @@ configure-tlp() {
     systemctl enable --now tlp.service 2>/dev/null || log-warn "Failed to enable TLP service"
     systemctl mask systemd-rfkill.service systemd-rfkill.socket 2>/dev/null || log-warn "Failed to mask systemd-rfkill"
 
-    sed -i 's/^CPU_SCALING_GOVERNOR_ON_AC=.*/CPU_SCALING_GOVERNOR_ON_AC="performance"/' /etc/tlp.conf 2>/dev/null || true
-    sed -i 's/^CPU_ENERGY_PERF_POLICY_ON_AC=.*/CPU_ENERGY_PERF_POLICY_ON_AC="performance"/' /etc/tlp.conf 2>/dev/null || true
+    if ! sed -i 's/^CPU_SCALING_GOVERNOR_ON_AC=.*/CPU_SCALING_GOVERNOR_ON_AC="performance"/' /etc/tlp.conf 2>/dev/null; then
+        log-warn "Failed to update CPU_SCALING_GOVERNOR_ON_AC in /etc/tlp.conf"
+    fi
+    if ! sed -i 's/^CPU_ENERGY_PERF_POLICY_ON_AC=.*/CPU_ENERGY_PERF_POLICY_ON_AC="performance"/' /etc/tlp.conf 2>/dev/null; then
+        log-warn "Failed to update CPU_ENERGY_PERF_POLICY_ON_AC in /etc/tlp.conf"
+    fi
 
     log-success "TLP configured"
 }

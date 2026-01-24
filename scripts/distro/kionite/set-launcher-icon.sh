@@ -30,11 +30,11 @@ set-launcher-icon() {
         return 0
     fi
 
-    applet_id="$(grep -B1 "plugin=org.kde.plasma.kickoff" "$config_file" | grep -oP '\[Applets\]\[\K[0-9]+' || true)"
-    containment_id="$(grep -B1 "plugin=org.kde.plasma.kickoff" "$config_file" | grep -oP '\[Containments\]\[\K[0-9]+' || true)"
+    applet_id="$(grep -B1 "plugin=org.kde.plasma.kickoff" "$config_file" 2>/dev/null | grep -oP '\[Applets\]\[\K[0-9]+')"
+    containment_id="$(grep -B1 "plugin=org.kde.plasma.kickoff" "$config_file" 2>/dev/null | grep -oP '\[Containments\]\[\K[0-9]+')"
 
     if [[ -z "$applet_id" ]] || [[ -z "$containment_id" ]]; then
-        log-warn "Kickoff applet not found in config"
+        log-warn "Kickoff applet not found in config: $config_file"
         return 0
     fi
 

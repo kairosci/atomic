@@ -48,6 +48,25 @@ setup_alias() {
     fi
 }
 
+# @description Removes a shell alias from .zshrc.
+# @arg $1 string Alias name
+remove_alias() {
+    local alias_name="$1"
+    local user_home zshrc
+    user_home="$(get-user-home)"
+    zshrc="$user_home/.zshrc"
+
+    if [[ ! -f "$zshrc" ]]; then
+        return
+    fi
+
+    if grep -q "alias $alias_name=" "$zshrc"; then
+         sed -i "/alias $alias_name=/d" "$zshrc"
+         log-success "Alias '$alias_name' removed from .zshrc"
+         fix-ownership "$zshrc"
+    fi
+}
+
 # @description Installs a JetBrains IDE.
 # @arg $1 string Product code (IIU, CL, etc.)
 # @arg $2 string Product name
@@ -153,13 +172,85 @@ install_android_studio() {
     setup_alias "studio" "$current_link/bin/studio.sh"
 }
 
+# @description Uninstalls a JetBrains IDE.
+# @arg $1 string Product code (ignored, kept for symmetry)
+# @arg $2 string Product name
+# @arg $3 string Binary name
+uninstall_jetbrains() {
+    local name="$2"
+    local binary_name="$3"
+    local current_link="$INSTALL_DIR/$name"
+
+    if [[ -L "$current_link" ]]; then
+        local target_dir
+        target_dir=$(readlink -f "$current_link")
+        log-info "Removing $name from $target_dir..."
+
+        sudo rm "$current_link"
+        if [[ -d "$target_dir" ]]; then
+            sudo rm -rf "$target_dir"
+        fi
+
+        remove_alias "$binary_name"
+        log-success "$name uninstalled"
+    elif [[ -d "$INSTALL_DIR/$name" ]]; then
+        # Handle case where it might be a directory instead of symlink (older installs?)
+        log-info "Removing $name directory..."
+        sudo rm -rf "$INSTALL_DIR/$name"
+        remove_alias "$binary_name"
+        log-success "$name uninstalled"
+    fi
+}
+
+# @description Uninstalls Android Studio.
+uninstall_android_studio() {
+    local name="android-studio"
+    local binary_name="studio"
+    local current_link="$INSTALL_DIR/$name"
+
+    if [[ -L "$current_link" ]]; then
+        local target_dir
+        target_dir=$(readlink -f "$current_link")
+        log-info "Removing $name from $target_dir..."
+
+        sudo rm "$current_link"
+        if [[ -d "$target_dir" ]]; then
+            sudo rm -rf "$target_dir"
+        fi
+
+        remove_alias "$binary_name"
+        log-success "$name uninstalled"
+    elif [[ -d "$INSTALL_DIR/$name" ]]; then
+        log-info "Removing $name directory..."
+        sudo rm -rf "$INSTALL_DIR/$name"
+        remove_alias "$binary_name"
+        log-success "$name uninstalled"
+    fi
+}
+
+# @description Checks if any IDEs are installed.
+is_any_installed() {
+    if [[ -L "$INSTALL_DIR/intellij" ]] || [[ -L "$INSTALL_DIR/clion" ]] || [[ -L "$INSTALL_DIR/android-studio" ]]; then
+        return 0
+    fi
+    return 1
+}
+
 # @description Main entry point.
 main() {
     ensure-root
 
-    install_jetbrains "IIU" "intellij" "idea"
-    install_jetbrains "CL" "clion" "clion"
-    install_android_studio
+    if is_any_installed; then
+        log-info "IDEs detected. Toggling to UNINSTALL mode."
+        uninstall_jetbrains "IIU" "intellij" "idea"
+        uninstall_jetbrains "CL" "clion" "clion"
+        uninstall_android_studio
+    else
+        log-info "No IDEs detected. Toggling to INSTALL mode."
+        install_jetbrains "IIU" "intellij" "idea"
+        install_jetbrains "CL" "clion" "clion"
+        install_android_studio
+    fi
 }
 
 main "$@"

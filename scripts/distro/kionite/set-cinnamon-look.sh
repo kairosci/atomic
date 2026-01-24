@@ -15,7 +15,7 @@ readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
 # Corner radius for window decorations (Cinnamon-style: subtle)
-readonly CORNER_RADIUS="4"
+readonly CORNER_RADIUS="3"
 
 #######################################
 # Writes a KDE configuration value using kwriteconfig.
@@ -46,7 +46,9 @@ apply-kwrite() {
 reload-kwin() {
     for tool in qdbus6 qdbus qdbus-qt5; do
         if command -v "$tool" &>/dev/null; then
-            "$tool" org.kde.KWin /KWin reconfigure 2>/dev/null || true
+            if ! "$tool" org.kde.KWin /KWin reconfigure 2>/dev/null; then
+                log-warn "Failed to reload KWin via $tool"
+            fi
             return
         fi
     done
@@ -58,7 +60,9 @@ reload-kwin() {
 reload-plasmashell() {
     for tool in qdbus6 qdbus qdbus-qt5; do
         if command -v "$tool" &>/dev/null; then
-            "$tool" org.kde.plasmashell /PlasmaShell evaluateScript "loadTemplate('org.kde.plasma.desktop.defaultPanel')" 2>/dev/null || true
+            if ! "$tool" org.kde.plasmashell /PlasmaShell evaluateScript "loadTemplate('org.kde.plasma.desktop.defaultPanel')" 2>/dev/null; then
+                log-warn "Failed to reload plasmashell via $tool"
+            fi
             return
         fi
     done

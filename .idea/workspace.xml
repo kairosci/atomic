@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="70d7d6b8-5b6f-4387-8f7b-f9907f80fc8c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.github/pull_request_template.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/deep-clean.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/reset-home.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/clean-orphans.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/clean-orphans.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/hide-grub.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/hide-grub.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/kionite/disable-emojier.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/kionite/disable-emojier.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/kionite/set-konsole.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/kionite/set-konsole.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/kionite/set-launcher-icon.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/kionite/set-launcher-icon.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/optimize-system.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/optimize-system.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/rename-btrfs.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/rename-btrfs.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-flatpak.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-flatpak.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-omz.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-omz.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-protonmail-pwa.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-protonmail-pwa.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-rpm.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-rpm.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-safe-delete.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-safe-delete.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-spotify-pwa.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-spotify-pwa.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/set-toolbox-dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/set-toolbox-dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/script/silverblue/set-theme.sh" beforeDir="false" afterPath="$PROJECT_DIR$/config/script/silverblue/set-theme.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.sh" beforeDir="false" afterPath="$PROJECT_DIR$/index.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/common.sh" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.sh" beforeDir="false" afterPath="$PROJECT_DIR$/setup.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/delete-folder.sh" beforeDir="false" afterPath="$PROJECT_DIR$/utils/delete-folder.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/folder-protection/set.sh" beforeDir="false" afterPath="$PROJECT_DIR$/utils/folder-protection/set.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/folder-protection/unset.sh" beforeDir="false" afterPath="$PROJECT_DIR$/utils/folder-protection/unset.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/switch-distro/main.sh" beforeDir="false" afterPath="$PROJECT_DIR$/utils/switch-distro/main.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/toggle-folder-protection.sh" beforeDir="false" afterPath="$PROJECT_DIR$/utils/toggle-folder-protection.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/update-system/main.sh" beforeDir="false" afterPath="$PROJECT_DIR$/utils/update-system/main.sh" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="AqYUxSkV" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="38A0eE6IcpbPoJMbRKqfFhLg3KO" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "/home/a.attilio/.var/app/com.jetbrains.IntelliJ-IDEA-Ultimate/data/JetBrains/IntelliJIdea2025.3/Shell Script/shellcheck",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "Rebasing master",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/a.attilio/Progetti/pdf.js",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="70d7d6b8-5b6f-4387-8f7b-f9907f80fc8c" name="Changes" comment="" />
+      <created>1768227163424</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1768227163424</updated>
+      <workItem from="1768227213707" duration="61000" />
+      <workItem from="1768227421324" duration="31000" />
+      <workItem from="1768227480621" duration="164000" />
+      <workItem from="1768227676649" duration="6636000" />
+      <workItem from="1768243615387" duration="100000" />
+      <workItem from="1768243737205" duration="506000" />
+      <workItem from="1768244283785" duration="93000" />
+      <workItem from="1768244836964" duration="316000" />
+      <workItem from="1768245653156" duration="716000" />
+      <workItem from="1768254122694" duration="497000" />
+      <workItem from="1768254653770" duration="84000" />
+      <workItem from="1768254763988" duration="230000" />
+      <workItem from="1768255187768" duration="634000" />
+      <workItem from="1768255919024" duration="154000" />
+      <workItem from="1768256512190" duration="16000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix: resolve zsh compatibility issues and enhance package management" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>

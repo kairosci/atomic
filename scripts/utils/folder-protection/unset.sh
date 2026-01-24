@@ -27,7 +27,9 @@ unprotect-directory-recursive() {
     find "$target_dir" -mount -type d | while read -r dir; do
         if [[ -f "$dir/$ANCHOR_FILE" ]]; then
             log-info "Unprotecting: $dir"
-            chattr -i "$dir/$ANCHOR_FILE" 2>/dev/null || true
+            if ! chattr -i "$dir/$ANCHOR_FILE" 2>/dev/null; then
+                log-warn "Failed to remove immutable flag from $dir/$ANCHOR_FILE"
+            fi
             rm -f "$dir/$ANCHOR_FILE"
         fi
     done

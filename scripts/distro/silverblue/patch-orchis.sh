@@ -2,7 +2,7 @@
 # @file patch-orchis.sh
 # @brief Patches Orchis theme for Kairosci style
 # @description
-#   Modifies Orchis theme SCSS files to remove border-radius from UI elements.
+#   Modifies Orchis theme SCSS files to set border-radius (4px) for UI elements.
 #   Also creates window decoration CSS overrides with subtle rounding.
 #
 # @example
@@ -17,10 +17,10 @@ readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
 # @description Border radius for app UI elements (sharp but subtle)
-readonly APP_RADIUS="4px"
+readonly APP_RADIUS="3px"
 
 # @description Border radius for window decorations (subtle)
-readonly WINDOW_RADIUS="4px"
+readonly WINDOW_RADIUS="3px"
 
 # @description Patches all border-radius SCSS variables in Orchis source.
 # @arg $1 string Path to cloned Orchis theme directory
@@ -71,10 +71,10 @@ apply-window-override() {
         mkdir -p "$dir"
         cat > "$dir/gtk.css" << 'EOF'
 /* Kairosci Style - Subtle window rounding */
-window, .window-frame, .csd, decoration { border-radius: 4px; }
-.titlebar, headerbar { border-radius: 4px 4px 0 0; }
-.dialog-vbox, popover, menu, .menu, tooltip, .tooltip { border-radius: 4px; }
-windowcontrols, .titlebutton { border-radius: 2px; }
+window, .window-frame, .csd, decoration { border-radius: 3px; }
+.titlebar, headerbar { border-radius: 3px 3px 0 0; }
+.dialog-vbox, popover, menu, .menu, tooltip, .tooltip, .osd { border-radius: 3px; }
+windowcontrols, .titlebutton { border-radius: 3px; }
 EOF
         log-info "Created $dir/gtk.css"
     done
