@@ -28,8 +28,7 @@ show-menu() {
     printf "  [4] Folder Protection\n"
     printf "  [5] Switch Distro\n"
     printf "  [6] Deep Clean\n"
-    printf "  [7] Install IDEs\n"
-    printf "  [8] ${RED}Exit${NC}\n"
+    printf "  [7] ${RED}Exit${NC}\n"
     printf "\n"
 }
 
@@ -78,15 +77,6 @@ run-deep-clean() {
     show-execution-summary
 }
 
-# @description Runs IDE installation.
-run-install-ides() {
-    clear-execution-tracking
-
-    run-with-status "$SCRIPT_DIR/scripts/utils/install-ides.sh" "Install IDEs"
-
-    show-execution-summary
-}
-
 # @description Main entry point.
 main() {
     log-info "Setting execute permissions on scripts..."
@@ -117,8 +107,7 @@ main() {
             4) confirm "Toggle folder protection?" && run-folder-protection ;;
             5) confirm "Switch distro?" && run-switch-distro ;;
             6) confirm "Deep clean home (risk of data loss)?" && run-deep-clean ;;
-            7) confirm "Install IDEs (IntelliJ, CLion, Android Studio)?" && run-install-ides ;;
-            8) log-info "Exiting..."; exit 0 ;;
+            7) log-info "Exiting..."; exit 0 ;;
             *) log-warn "Invalid option: $choice" ;;
         esac
 

@@ -17,10 +17,10 @@ readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
 # @description Border radius for app UI elements (sharp but subtle)
-readonly APP_RADIUS="3px"
+readonly APP_RADIUS="8px"
 
 # @description Border radius for window decorations (subtle)
-readonly WINDOW_RADIUS="3px"
+readonly WINDOW_RADIUS="8px"
 
 # @description Patches all border-radius SCSS variables in Orchis source.
 # @arg $1 string Path to cloned Orchis theme directory
@@ -71,10 +71,10 @@ apply-window-override() {
         mkdir -p "$dir"
         cat > "$dir/gtk.css" << 'EOF'
 /* Kairosci Style - Subtle window rounding */
-window, .window-frame, .csd, decoration { border-radius: 3px; }
-.titlebar, headerbar { border-radius: 3px 3px 0 0; }
-.dialog-vbox, popover, menu, .menu, tooltip, .tooltip, .osd { border-radius: 3px; }
-windowcontrols, .titlebutton { border-radius: 3px; }
+window, .window-frame, .csd, decoration { border-radius: 8px; }
+.titlebar, headerbar { border-radius: 8px 8px 0 0; }
+.dialog-vbox, popover, menu, .menu, tooltip, .tooltip, .osd { border-radius: 8px; }
+windowcontrols, .titlebutton { border-radius: 8px; }
 EOF
         log-info "Created $dir/gtk.css"
     done
