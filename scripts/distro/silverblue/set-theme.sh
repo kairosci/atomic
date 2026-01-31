@@ -81,7 +81,7 @@ install-orchis() {
     # -c dark: Dark color scheme
 
     # --tweaks: solid (no transparency), black (full black), primary (themed radio buttons)
-    ./install.sh -c dark -s compact --tweaks solid black primary
+    ./install.sh -c dark -s standard --tweaks solid black primary
 
     popd > /dev/null
 
