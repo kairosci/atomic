@@ -116,7 +116,7 @@ alias l='ls -CF'
 
 # System Maintenance
 alias update='sudo rpm-ostree upgrade'
-alias clean='rpm-ostree cleanup -m && flatpak uninstall --unused'
+alias clean='rpm-ostree cleanup -m -p --base --rollback && flatpak uninstall --unused'
 alias y='yes'
 
 # Safety

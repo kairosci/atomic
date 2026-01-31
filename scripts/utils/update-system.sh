@@ -31,7 +31,7 @@ cleanup() {
     log-info "Cleaning up system"
 
     log-info "Cleaning rpm-ostree base"
-    rpm-ostree cleanup --base -m
+    rpm-ostree cleanup -m -p --base --rollback
 
     log-info "Removing unused Flatpak runtimes"
     flatpak uninstall --unused --delete-data -y || log-warn "Failed to uninstall unused flatpaks"
