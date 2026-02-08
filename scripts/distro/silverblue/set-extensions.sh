@@ -65,7 +65,7 @@ configure-just-perfection() {
     dconf write /org/gnome/shell/extensions/just-perfection/search false
     dconf write /org/gnome/shell/extensions/just-perfection/workspace true
     dconf write /org/gnome/shell/extensions/just-perfection/animation 4
-    dconf write /org/gnome/shell/extensions/just-perfection/panel-corner-size 1
+    # dconf write /org/gnome/shell/extensions/just-perfection/panel-corner-size 1
     dconf write /org/gnome/shell/extensions/just-perfection/workspace-background-corner-size 1
 }
 

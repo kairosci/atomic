@@ -71,24 +71,17 @@ install-orchis() {
     mkdir -p "$THEME_DIR"
     git clone --depth 1 "$ORCHIS_REPO" "$work_dir/orchis"
 
-    # Apply border-radius patch (2px = sharp)
-    source "$SCRIPT_DIR/patch-orchis.sh"
-    patch-border-radius "$work_dir/orchis"
-
     pushd "$work_dir/orchis" > /dev/null
 
     # Install Dark variants with premium tweaks
     # -c dark: Dark color scheme
 
-    # --tweaks: solid (no transparency), black (full black), primary (themed radio buttons)
-    ./install.sh -c dark -s standard --tweaks solid black primary
+    # --tweaks: (standard)
+    ./install.sh -c dark
 
     popd > /dev/null
 
     rm -rf "$work_dir"
-
-    # Apply window decoration override CSS
-    apply-window-override
 
     log-success "Orchis theme installed (Premium Dark)"
 }
