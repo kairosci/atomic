@@ -17,10 +17,13 @@ readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
 source "$SCRIPT_DIR/../../../lib/common.sh"
 
 # @description Border radius for app UI elements (sharp but subtle)
-readonly APP_RADIUS="8px"
+readonly APP_RADIUS="2px"
+
+# @description Border radius for the top panel (rounder)
+readonly PANEL_RADIUS="8px"
 
 # @description Border radius for window decorations (subtle)
-readonly WINDOW_RADIUS="8px"
+readonly WINDOW_RADIUS="2px"
 
 # @description Patches all border-radius SCSS variables in Orchis source.
 # @arg $1 string Path to cloned Orchis theme directory
@@ -33,19 +36,21 @@ patch-border-radius() {
     [[ -d "$orchis_dir" ]] || { log-error "Orchis directory not found: $orchis_dir"; return 1; }
     [[ -d "$sass_dir" ]] || { log-error "SASS directory not found: $sass_dir"; return 1; }
 
-    log-info "Patching border-radius to ${APP_RADIUS}..."
+    log-info "Patching border-radius: Apps=${APP_RADIUS}, Panel=${PANEL_RADIUS}..."
 
     local -a radius_vars=(
         border-radius material-radius button-radius menu-radius
         menuitem-radius window-radius circular-radius popover-radius
         card-radius dialog-radius tooltip-radius corner-radius
-        panel-radius entry-radius switch-radius
+        entry-radius switch-radius
     )
 
     find "$sass_dir" -type f -name "*.scss" | while read -r file; do
         for var in "${radius_vars[@]}"; do
             sed -i -E "s/\\\$${var}:\s*[0-9]+px/\$${var}: ${APP_RADIUS}/g" "$file"
         done
+        # Patch panel-radius separately
+        sed -i -E "s/\\\$panel-radius:\s*[0-9]+px/\$panel-radius: ${PANEL_RADIUS}/g" "$file"
     done
 
     local -a source_dirs=("$orchis_dir/src/gtk" "$orchis_dir/src/gnome-shell")
@@ -71,10 +76,10 @@ apply-window-override() {
         mkdir -p "$dir"
         cat > "$dir/gtk.css" << 'EOF'
 /* Kairosci Style - Subtle window rounding */
-window, .window-frame, .csd, decoration { border-radius: 8px; }
-.titlebar, headerbar { border-radius: 8px 8px 0 0; }
-.dialog-vbox, popover, menu, .menu, tooltip, .tooltip, .osd { border-radius: 8px; }
-windowcontrols, .titlebutton { border-radius: 8px; }
+window, .window-frame, .csd, decoration { border-radius: 2px; }
+.titlebar, headerbar { border-radius: 2px 2px 0 0; }
+.dialog-vbox, popover, menu, .menu, tooltip, .tooltip, .osd { border-radius: 2px; }
+windowcontrols, .titlebutton { border-radius: 2px; }
 EOF
         log-info "Created $dir/gtk.css"
     done

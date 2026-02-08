@@ -43,14 +43,14 @@ configure-dash-to-dock() {
     log-info "Configuring Dash to Dock (Premium Floating)..."
 
     dconf write /org/gnome/shell/extensions/dash-to-dock/dock-position "'BOTTOM'"
-    dconf write /org/gnome/shell/extensions/dash-to-dock/dash-max-icon-size 42
+    dconf write /org/gnome/shell/extensions/dash-to-dock/dash-max-icon-size 48
     dconf write /org/gnome/shell/extensions/dash-to-dock/dock-fixed false
     dconf write /org/gnome/shell/extensions/dash-to-dock/extend-height false
 
     dconf write /org/gnome/shell/extensions/dash-to-dock/intellihide-mode "'ALL_WINDOWS'"
     dconf write /org/gnome/shell/extensions/dash-to-dock/autohide-in-fullscreen true
 
-    dconf write /org/gnome/shell/extensions/dash-to-dock/custom-theme-shrink true
+    dconf write /org/gnome/shell/extensions/dash-to-dock/custom-theme-shrink false
     dconf write /org/gnome/shell/extensions/dash-to-dock/transparency-mode "'FIXED'"
     dconf write /org/gnome/shell/extensions/dash-to-dock/background-opacity 0.2
 

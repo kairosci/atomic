@@ -97,18 +97,22 @@ install-orchis() {
 #######################################
 clean-orchis-variants() {
     log-info "Cleaning up unused Orchis variants..."
-    if [[ -d "$THEME_DIR" ]]; then
-        find "$THEME_DIR" -maxdepth 1 -type d -name "Orchis*" | while read -r theme_path; do
+
+    local -a theme_dirs=("$THEME_DIR" "$HOME/.themes")
+    for dir in "${theme_dirs[@]}"; do
+        [[ -d "$dir" ]] || continue
+        find "$dir" -maxdepth 1 -type d -name "Orchis*" | while read -r theme_path; do
             local theme_name
             theme_name="$(basename "$theme_path")"
-            # Keep only the specifically installed variant (and maybe standard Dark as fallback if needed, but we want strict adherence)
+            # Keep only the specifically installed variant
             if [[ "$theme_name" != "Orchis-Dark" ]]; then
                 log-info "Removing unused variant: $theme_name"
                 rm -rf "$theme_path"
             fi
         done
-        log-success "Unused variants removed"
-    fi
+    done
+
+    log-success "Unused variants removed"
 }
 
 #######################################
