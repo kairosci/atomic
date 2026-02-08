@@ -1,0 +1,48 @@
+---
+- name: Install Orchis theme
+  block:
+    - name: Clone Orchis theme repository
+      git:
+        repo: "https://github.com/vinceliuice/Orchis-theme.git"
+        dest: "/tmp/orchis-theme"
+        depth: 1
+        force: yes
+
+    - name: Install Orchis theme (Standard Dark)
+      command: "./install.sh -c dark"
+      args:
+        chdir: "/tmp/orchis-theme"
+      register: install_theme
+      changed_when: "'Installed' in install_theme.stdout"
+
+- name: Configure GNOME Interface
+  dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - { key: "/org/gnome/desktop/interface/gtk-theme", value: "'Orchis-Dark'" }
+    - { key: "/org/gnome/desktop/interface/icon-theme", value: "'Papirus-Dark'" }
+    - { key: "/org/gnome/desktop/interface/color-scheme", value: "'prefer-dark'" }
+    - { key: "/org/gnome/shell/extensions/user-theme/name", value: "'Orchis-Dark'" }
+    - { key: "/org/gnome/desktop/interface/font-name", value: "'Inter Regular 11'" }
+    - { key: "/org/gnome/desktop/interface/document-font-name", value: "'Inter Regular 11'" }
+    - { key: "/org/gnome/desktop/interface/monospace-font-name", value: "'Monospace 10'" }
+    - { key: "/org/gnome/desktop/wm/preferences/titlebar-font", value: "'Inter Bold 11'" }
+    - { key: "/org/gnome/desktop/interface/enable-animations", value: "true" }
+    - { key: "/org/gnome/mutter/center-new-windows", value: "true" }
+
+- name: Flatpak Overrides
+  block:
+    - name: Allow Flatpak access to themes and icons
+      command: "flatpak override --user --filesystem={{ item }}:ro"
+      loop:
+        - "~/.icons"
+        - "~/.local/share/icons"
+        - "/usr/share/icons"
+        - "~/.themes"
+        - "~/.local/share/themes"
+        - "~/.config/gtk-3.0"
+        - "~/.config/gtk-4.0"
+
+    - name: Set GTK_THEME env for Flatpak
+      command: "flatpak override --user --env=GTK_THEME=Orchis-Dark"

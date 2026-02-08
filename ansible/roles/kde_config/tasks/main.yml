@@ -1,0 +1,62 @@
+---
+- name: Configure Konsole Profile
+  block:
+    - name: Ensure Konsole directory exists
+      file:
+        path: "{{ ansible_user_dir }}/.local/share/konsole"
+        state: directory
+        mode: '0755'
+
+    - name: Create Kionite Konsole Profile
+      copy:
+        dest: "{{ ansible_user_dir }}/.local/share/konsole/Kionite.profile"
+        content: |
+          [Appearance]
+          Font=Adwaita Mono,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+          [General]
+          Name=Kionite
+          Parent=FALLBACK/
+        mode: '0644'
+
+- name: Configure Plasma Launcher Icon
+  block:
+    - name: Set Launcher Icon
+      shell: |
+        config_file="{{ ansible_user_dir }}/.config/plasma-org.kde.plasma.desktop-appletsrc"
+        if [ ! -f "$config_file" ]; then exit 0; fi
+
+        applet_id=$(grep -B1 "plugin=org.kde.plasma.kickoff" "$config_file" | grep -oP '\[Applets\]\[\K[0-9]+')
+        containment_id=$(grep -B1 "plugin=org.kde.plasma.kickoff" "$config_file" | grep -oP '\[Containments\]\[\K[0-9]+')
+
+        if [ -n "$applet_id" ] && [ -n "$containment_id" ]; then
+          kwriteconfig6 --file "$config_file" \
+            --group "Containments" --group "$containment_id" \
+            --group "Applets" --group "$applet_id" \
+            --group "Configuration" --group "General" \
+            --key "icon" "start-here-kde-plasma"
+          echo "Launcher icon updated"
+        fi
+      register: launcher_icon
+      changed_when: "'Launcher icon updated' in launcher_icon.stdout"
+      args:
+        executable: /bin/bash
+
+- name: Disable Plasma Emojier
+  block:
+    - name: Ensure applications directory exists
+      file:
+        path: "{{ ansible_user_dir }}/.local/share/applications"
+        state: directory
+        mode: '0755'
+
+    - name: Hide Emojier Desktop Service
+      copy:
+        dest: "{{ ansible_user_dir }}/.local/share/applications/org.kde.plasma.emojier.desktop"
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=Emoji Selector
+          Hidden=true
+          NoDisplay=true
+        mode: '0644'

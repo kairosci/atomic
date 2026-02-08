@@ -1,0 +1,44 @@
+---
+- name: Install Flatpak Apps
+  flatpak:
+    name: "{{ item }}"
+    state: present
+    remote: flathub
+    method: user
+  loop:
+    - com.discordapp.Discord
+    - net.nokyan.Resources
+
+- name: Create PWA Desktop Files
+  block:
+    - name: Ensure applications directory exists
+      file:
+        path: "{{ ansible_user_dir }}/.local/share/applications"
+        state: directory
+        mode: '0755'
+
+    - name: Create Spotify PWA
+      copy:
+        dest: "{{ ansible_user_dir }}/.local/share/applications/spotify-pwa.desktop"
+        content: |
+          [Desktop Entry]
+          Name=Spotify
+          Exec=flatpak run org.mozilla.firefox --new-window https://open.spotify.com
+          Icon=com.spotify.Client
+          Type=Application
+          Terminal=false
+          Categories=Music;Audio;
+        mode: '0644'
+
+    - name: Create ProtonMail PWA
+      copy:
+        dest: "{{ ansible_user_dir }}/.local/share/applications/protonmail-pwa.desktop"
+        content: |
+          [Desktop Entry]
+          Name=ProtonMail
+          Exec=flatpak run org.mozilla.firefox --new-window https://mail.proton.me
+          Icon=proton-mail
+          Type=Application
+          Terminal=false
+          Categories=Office;Email;
+        mode: '0644'

@@ -1,0 +1,31 @@
+---
+- name: Ensure base directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ ansible_user_dir }}/.local/share/fonts"
+    - "{{ ansible_user_dir }}/.local/share/themes"
+    - "{{ ansible_user_dir }}/.local/share/icons"
+    - "{{ ansible_user_dir }}/.config"
+
+- name: Install Inter font
+  block:
+    - name: Download Inter font
+      get_url:
+        url: "https://github.com/rsms/inter/releases/download/v4.0/Inter-4.0.zip"
+        dest: "/tmp/Inter-4.0.zip"
+      register: download_font
+
+    - name: Extract Inter font
+      unarchive:
+        src: "/tmp/Inter-4.0.zip"
+        dest: "{{ ansible_user_dir }}/.local/share/fonts/Inter"
+        remote_src: yes
+        include: ['*.ttf', '*.otf']
+      when: download_font.changed
+
+    - name: Update font cache
+      command: fc-cache -f "{{ ansible_user_dir }}/.local/share/fonts"
+      when: download_font.changed

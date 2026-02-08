@@ -1,0 +1,55 @@
+---
+- name: Install Oh My Zsh
+  block:
+    - name: Download OMZ installer
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/install-omz.sh
+        mode: '0755'
+
+    - name: Run OMZ installer (unattended)
+      command: /tmp/install-omz.sh --unattended
+      args:
+        creates: "{{ ansible_user_dir }}/.oh-my-zsh"
+      register: omz_install
+
+- name: Configure .zshrc
+  block:
+    - name: Set ZSH_THEME to refined
+      lineinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        regexp: '^ZSH_THEME='
+        line: 'ZSH_THEME="refined"'
+        state: present
+
+    - name: Add custom aliases
+      blockinfile:
+        path: "{{ ansible_user_dir }}/.zshrc"
+        marker: "# {mark} ANSIBLE MANAGED ALIASES"
+        block: |
+          # Custom Operations
+          alias ll='ls -alF'
+          la='ls -A'
+          l='ls -CF'
+
+          # System Maintenance
+          alias update='sudo rpm-ostree upgrade'
+          alias clean='rpm-ostree cleanup -m -p --base --rollback && flatpak uninstall --unused'
+          alias y='yes'
+
+          # Safety
+          alias cp='cp -i'
+          alias mv='mv -i'
+          alias rm='rm -i'
+
+          # Navigation
+          alias ..='cd ..'
+          alias ...='cd ../..'
+          alias .3='cd ../../..'
+          alias .4='cd ../../../..'
+
+- name: Change default shell to zsh
+  user:
+    name: "{{ ansible_user_id }}"
+    shell: /usr/bin/zsh
+  become: yes

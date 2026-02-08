@@ -1,0 +1,51 @@
+---
+- name: Apply Papirus Theme and Icons
+  block:
+    - name: Set Icon Theme to Papirus
+      command: kwriteconfig6 --file kdeglobals --group Icons --key Theme Papirus
+      ignore_errors: yes
+
+    - name: Set Cursor Theme to Breeze
+      command: kwriteconfig6 --file kcminputrc --group Mouse --key cursorTheme breeze_cursors
+      ignore_errors: yes
+
+    - name: Set Color Scheme to BreezeDark
+      command: kwriteconfig6 --file kdeglobals --group General --key ColorScheme BreezeDark
+      ignore_errors: yes
+
+- name: Configure KWin
+  block:
+    - name: Set Window Buttons to Right
+      command: kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnRight "IAX"
+      ignore_errors: yes
+    - name: Set Window Buttons on Left to None
+      command: kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnLeft "M"
+      ignore_errors: yes
+
+- name: Optimize Animations
+  block:
+    - name: Set Animation Duration Factor
+      command: kwriteconfig6 --file kdeglobals --group KDE --key AnimationDurationFactor 0.5
+      ignore_errors: yes
+    - name: Set Latency Policy
+      command: kwriteconfig6 --file kwinrc --group Compositing --key LatencyPolicy High
+      ignore_errors: yes
+
+- name: Reload KWin
+  shell: |
+    qdbus6 org.kde.KWin /KWin reconfigure || qdbus org.kde.KWin /KWin reconfigure
+  ignore_errors: yes
+  changed_when: false
+
+- name: Flatpak Overrides
+  block:
+    - name: Allow Flatpak access to themes and icons
+      command: "flatpak override --user --filesystem={{ item }}:ro"
+      loop:
+        - "~/.icons"
+        - "~/.local/share/icons"
+        - "/usr/share/icons"
+        - "~/.themes"
+        - "~/.local/share/themes"
+        - "~/.config/gtk-3.0"
+        - "~/.config/gtk-4.0"

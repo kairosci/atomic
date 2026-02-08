@@ -1,0 +1,81 @@
+---
+- name: Hide GRUB Menu
+  block:
+    - name: Set GRUB timeout to 0
+      replace:
+        path: /boot/grub2/grub.cfg
+        regexp: '^set timeout=.*'
+        replace: 'set timeout=0'
+      register: grub_config
+      ignore_errors: yes
+
+    - name: Make GRUB config read-only
+      file:
+        path: /boot/grub2/grub.cfg
+        mode: '0444'
+      when: grub_config.changed
+
+- name: Rename BTRFS labels to 'fedora'
+  command: btrfs filesystem label {{ item.path }} fedora
+  loop:
+    - { path: '/var' }
+    - { path: '/var/home' }
+  ignore_errors: yes
+  changed_when: false
+
+- name: Optimize GNOME Services
+  block:
+    - name: Disable unnecessary services
+      systemd:
+        name: "{{ item }}"
+        enabled: no
+        state: stopped
+      loop:
+        - cups.service
+        - cups-browsed.service
+        - avahi-daemon.service
+        - avahi-daemon.socket
+        - ModemManager.service
+      ignore_errors: yes
+
+    - name: Mask unnecessary services
+      systemd:
+        name: "{{ item }}"
+        masked: yes
+      loop:
+        - geoclue.service
+        - tracker-miner-fs-3.service
+        - tracker-extract-3.service
+      ignore_errors: yes
+
+- name: Apply Kernel Optimizations (sysctl)
+  copy:
+    dest: /etc/sysctl.d/99-performance.conf
+    content: |
+      vm.swappiness=100
+      vm.vfs_cache_pressure=50
+      vm.dirty_ratio=15
+      vm.dirty_background_ratio=5
+      net.core.rmem_max=16777216
+      net.core.wmem_max=16777216
+      net.ipv4.tcp_fastopen=3
+      net.ipv4.tcp_congestion_control=bbr
+      net.core.default_qdisc=cake
+      fs.file-max=2097152
+    mode: '0644'
+  register: sysctl_p
+
+- name: Reload sysctl
+  command: sysctl --system
+  when: sysctl_p.changed
+
+- name: Configure Safe Delete Aliases
+  lineinfile:
+    path: "{{ ansible_user_dir }}/.zshrc"
+    line: "{{ item }}"
+    create: yes
+    state: present
+  loop:
+    - "# Safe Delete Configuration (Kionite Setup)"
+    - "alias rm='gio trash 2>/dev/null || /usr/bin/rm'"
+    - "alias rp='/usr/bin/rm'"

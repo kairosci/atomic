@@ -1,0 +1,16 @@
+---
+- name: Configure Fedora Silverblue Desktop
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  roles:
+    - common
+    - system_config
+    - package_config
+    - shell_config
+    - apps_config
+    - gnome_theme
+    - gnome_extensions

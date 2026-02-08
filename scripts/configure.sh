@@ -2,128 +2,66 @@
 # @file configure.sh
 # @brief Fedora Atomic Configuration Index
 # @description
-#   Runs configuration scripts based on the detected distribution
-#   and tracks execution status.
+#   Detects available distro and runs the appropriate Ansible playbook.
+#   Installs Ansible if missing.
 
 set -euo pipefail
 
 readonly SCRIPT_FILE="${0:A}"
 readonly SCRIPT_DIR="${SCRIPT_FILE:h}"
-source "$SCRIPT_DIR/../lib/common.sh"
+source "$SCRIPT_DIR/../lib/common.sh" # Assumes lib/common.sh exists
 
-# @description Gets the core scripts directory.
-# @stdout Core directory path
-get-core-dir() {
-    echo "$SCRIPT_DIR/core"
-}
+main() {
+    local distro
+    distro=$(detect-distro) # From common.sh
 
-# @description Gets the distro scripts directory.
-# @stdout Distro directory path
-get-distro-dir() {
-    echo "$SCRIPT_DIR/distro"
-}
+    log-title "Configuration for $distro (via Ansible)"
 
-# @description Runs all configuration scripts for the detected distro.
-run-scripts() {
-    local distro core_dir distro_dir
-    distro="$(detect-distro)"
-
-    if [[ "$distro" == "unknown" ]]; then
-        log-warn "Running on unsupported distro (Toolbx or non-Fedora Atomic). Only common scripts will be executed."
+    # Ensure Ansible is installed
+    if ! command -v ansible-playbook &>/dev/null; then
+        log-info "Ansible not found. Attempting to install..."
+        if command -v rpm-ostree &>/dev/null; then
+            if ! rpm-ostree status | grep -q "ansible"; then
+                log-warn "Ansible is not layered and not in toolbox. Installing generic version in toolbox might be better."
+                log-info "Trying to run in toolbox if available..."
+                if command -v toolbox &>/dev/null; then
+                     log-info "Please run: toolbox run ansible-playbook ..."
+                     log-error "Automatic toolbox execution not yet implemented. Please install ansible: 'rpm-ostree install ansible' and reboot."
+                     exit 1
+                fi
+                # Fallback to rpm-ostree (requires reboot, so we can't continue suitable)
+                log-error "Ansible must be installed. Run 'rpm-ostree install ansible' and reboot."
+                exit 1
+            fi
+        elif command -v dnf &>/dev/null; then
+            sudo dnf install -y ansible
+        else
+             log-error "Cannot install ansible. Package manager not found."
+             exit 1
+        fi
     fi
-    core_dir="$(get-core-dir)"
-    distro_dir="$(get-distro-dir)"
 
-    log-title "Configuration for $distro"
-
-    [[ -d "$core_dir" ]] || { log-error "Core script directory not found: $core_dir"; exit 1; }
-
-    local -a common_scripts=(
-        "$core_dir/hide-grub.sh"
-        "$core_dir/rename-btrfs.sh"
-        "$core_dir/set-flatpak.sh"
-        "$core_dir/set-rpm.sh"
-        "$core_dir/set-spotify-pwa.sh"
-        "$core_dir/set-protonmail-pwa.sh"
-        "$core_dir/manage-system.sh"
-        "$core_dir/set-safe-delete.sh"
-        "$core_dir/set-omz.sh"
-        "$core_dir/optimize-system.sh"
-    )
-
-    local -a distro_scripts=()
-
+    local playbook=""
     case "$distro" in
-        kionite)
-            distro_scripts=(
-                "$distro_dir/kionite/disable-emojier.sh"
-                "$distro_dir/kionite/set-launcher-icon.sh"
-                "$distro_dir/kionite/set-konsole.sh"
-                "$distro_dir/kionite/set-papirus-look.sh"
-                "$distro_dir/kionite/optimize-animations.sh"
-            )
-            ;;
         silverblue)
-            distro_scripts=(
-                "$distro_dir/silverblue/set-theme.sh"
-                "$distro_dir/silverblue/set-extensions.sh"
-                "$distro_dir/silverblue/optimize-animations.sh"
-            )
+            playbook="$SCRIPT_DIR/../ansible/playbooks/silverblue.yml"
             ;;
-        cosmic)
-            distro_scripts=(
-                "$distro_dir/cosmic/set-appearance.sh"
-            )
+        kionite)
+            playbook="$SCRIPT_DIR/../ansible/playbooks/kinoite.yml"
             ;;
         *)
-            log-warn "Unknown distro: $distro, running common scripts only"
+            log-warn "Unsupported distro for full Ansible config: $distro"
+            exit 0
             ;;
     esac
 
-    local -A results
-    local all_scripts=("${common_scripts[@]}" "${distro_scripts[@]}")
-
-    log-info "Executing scripts..."
-
-    for script in "${all_scripts[@]}"; do
-        if [[ -f "$script" ]]; then
-            log-info "Processing: $script"
-            if "$script"; then
-                results["$(basename "$script")"]="SUCCESS"
-            else
-                results["$(basename "$script")"]="FAILURE"
-                log-error "Script failed: $script"
-            fi
-        else
-            log-warn "Script not found: $script"
-            results["$(basename "$script")"]="NOT_FOUND"
-        fi
-    done
-
-    log-title "Execution Status Log"
-    local all_success=true
-
-    for script_name in "${(@k)results}"; do
-        if [[ "${results[$script_name]}" == "SUCCESS" ]]; then
-            printf "${GREEN}[PASS]${NC} %s\n" "$script_name"
-        else
-            printf "${RED}[FAIL]${NC} %s\n" "$script_name"
-            if [[ "${results[$script_name]}" == "FAILURE" ]]; then
-                all_success=false
-            fi
-        fi
-    done
-
-    if "$all_success"; then
-        log-success "All scripts completed successfully."
+    if [[ -f "$playbook" ]]; then
+        log-info "Running playbook: $playbook"
+        ansible-playbook "$playbook"
     else
-        log-error "Some scripts failed. Please check the logs."
+        log-error "Playbook not found: $playbook"
+        exit 1
     fi
-}
-
-# @description Main entry point.
-main() {
-    run-scripts
 }
 
 main "$@"
